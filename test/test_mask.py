@@ -6,18 +6,18 @@ def main():
     sct = MSS.mss()
     monitor = {"left" : 5, "top" : 115, "width" : 775, "height" : 585}
     
-    fight_mask_black = IMG.open("D:\\Study\\7.VHPC\\reinforcement_leraning\\StreetFighter2WW\\code\\test\\resource\\fight_mask_black.png")
-    fight_mask = IMG.open("D:\\Study\\7.VHPC\\reinforcement_leraning\\StreetFighter2WW\\code\\test\\resource\\fight_mask.png")
+    fight_mask_black = IMG.open("D:\\Git\\street-fighter-agent\\resource\\fight_masking_black.png")
+    fight_mask = IMG.open("D:\\Git\\street-fighter-agent\\resource\\fight_masking_color.png")
     fight_mask = fight_mask.convert("RGB")
     fight_mask_hash_value = hash(fight_mask.tobytes())
 
-    you_lose_mask_black = IMG.open("D:\\Study\\7.VHPC\\reinforcement_leraning\\StreetFighter2WW\\code\\test\\resource\\you_lose_mask_black.png")
-    you_lose_mask = IMG.open("D:\\Study\\7.VHPC\\reinforcement_leraning\\StreetFighter2WW\\code\\test\\resource\\you_lose_mask.png")
+    you_lose_mask_black = IMG.open("D:\\Git\\street-fighter-agent\\resource\\win_masking_black.png")
+    you_lose_mask = IMG.open("D:\\Git\\street-fighter-agent\\resource\\win_masking_color.png")
     you_lose_mask = you_lose_mask.convert("RGB")
     you_lose_mask_hash_value = hash(you_lose_mask.tobytes())
 
-    you_win_mask_black = IMG.open("D:\\Study\\7.VHPC\\reinforcement_leraning\\StreetFighter2WW\\code\\test\\resource\\you_win_mask_black.png")
-    you_win_mask = IMG.open("D:\\Study\\7.VHPC\\reinforcement_leraning\\StreetFighter2WW\\code\\test\\resource\\you_win_mask.png")
+    you_win_mask_black = IMG.open("D:\\Git\\street-fighter-agent\\resource\\lose_masking_black.png")
+    you_win_mask = IMG.open("D:\\Git\\street-fighter-agent\\resource\\lose_masking_color.png")
     you_win_mask = you_win_mask.convert("RGB")
     you_win_mask_hash_value = hash(you_win_mask.tobytes())
 

@@ -6,10 +6,10 @@ def main():
 
     sct = mss.mss()
     
-    monitor = {"left" : 5, "top" : 115, "width" : 775, "height" : 585}
-    output = "D:\\Study\\7.VHPC\\reinforcement_leraning\\StreetFighter2WW\\code\\test\\resource\\img_total.png".format(**monitor)
-    sct_img = sct.grab(monitor)
-    mss.tools.to_png(sct_img.rgb, sct_img.size, output=output)
+    # monitor = {"left" : 5, "top" : 115, "width" : 775, "height" : 585}
+    # output = "D:\\Study\\7.VHPC\\reinforcement_leraning\\StreetFighter2WW\\code\\test\\resource\\img_total.png".format(**monitor)
+    # sct_img = sct.grab(monitor)
+    # mss.tools.to_png(sct_img.rgb, sct_img.size, output=output)
 
     # monitor = {"left" : 100, "top" : 150, "width" : 275, "height" : 35}
     # output = "D:\\Study\\7.VHPC\\reinforcement_leraning\\StreetFighter2WW\\code\\test\\resource\\img_1p_hp.png".format(**monitor)
