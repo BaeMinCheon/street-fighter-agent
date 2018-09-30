@@ -13,7 +13,7 @@ def main():
 
         time_end = DT.datetime.now()
         interval = (time_end - time_start).total_seconds() * 1000
-        print("{} ms".format(interval))
+        print("{} ms \n".format(interval))
 
 if __name__ == "__main__":
     main()
