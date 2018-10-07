@@ -19,12 +19,20 @@ def main():
     interval = (time_end - time_start).total_seconds() * 1000
     print("{} ms".format(interval))
 
-    list_p1_hp = img_p1_hp.getcolors()
-    list_p2_hp = img_p2_hp.getcolors()
-    print("list_p1_hp")
-    print(list_p1_hp)
-    print("list_p2_hp")
-    print(list_p2_hp)
+    list_p1_hp = list(img_p1_hp.getdata())
+    list_p2_hp = list(img_p2_hp.getdata())
+    
+    score_p1 = 0
+    for i in range(len(list_p1_hp)):
+        if list_p1_hp[i] == (247, 219, 0):
+            score_p1 += 1
+    print("score_p1 : {}".format(score_p1))
+
+    score_p2 = 0
+    for i in range(len(list_p2_hp)):
+        if list_p2_hp[i] == (247, 219, 0):
+            score_p2 += 1
+    print("score_p2 : {}".format(score_p2))
 
 if __name__ == "__main__":
     main()
