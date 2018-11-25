@@ -1,5 +1,8 @@
 import random
-
+import numpy as np
+import tensorflow as tf
+import collections
+import DQN
 
 class Agent:
 
