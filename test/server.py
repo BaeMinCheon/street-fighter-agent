@@ -1,31 +1,51 @@
 import socket
 
-ip_address = '127.0.0.1'
-port_number = 7000
-BUFFER_SIZE = 1024
 
-ss = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-ss.bind((ip_address, port_number))
-ss.listen(1)
+class Server:
 
-while True:
-    print('server starts...')
-    cs, addr = ss.accept()
-    print('connected to {}'.format(addr))
+    def __init__(self, _ip, _port):
+        self.ip_address = _ip
+        self.port_number = _port
+        self.BUFSIZ = 1024
+        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_socket.bind((self.ip_address, self.port_number))
+        self.server_socket.listen(1)
+        print('=====')
+        print('server initialized')
+        print('=====')
 
-    while True:
+    def Accept(self):
+        self.client_socket, self.client_address = self.server_socket.accept()
+        print('=====')
+        print('server accepted client : {}'.format(self.client_address))
+        print('=====')
+
+    def Receive(self):
         try:
-            buffer = cs.recv(BUFFER_SIZE)
-            if buffer:
-                p1_isLeft, gap_X, gap_Y, gap_HP_for_p1, p1_canInputMove, p1_canInputAction = buffer.decode('utf8').split(".")
-                print('p1_isLeft : {} \t gap_X : {} \t gap_Y : {} \t gap_HP_for_p1 : {} \t p1_canInputMove : {} \t p1_canInputAction : {}'.format(p1_isLeft, gap_X, gap_Y, gap_HP_for_p1, p1_canInputMove, p1_canInputAction))
-                cs.send(bytearray('ACK !', 'utf-8'))
+            self.buffer = self.client_socket.recv(self.BUFSIZ)
+            self.list_feature = []
+            if self.buffer:
+                self.list_feature = self.buffer.decode('utf8').split('.')
+                return True
             else:
-                print('disconnected to {}'.format(addr))
-                break
+                raise socket.error()
         except socket.error:
-            print('disconnected to {}'.format(addr))
-            break
+            self.Close()
+            return False
 
-    print('server shuts down...')
-    cs.close()
+    def GetFeatures(self):
+        return self.list_feature
+
+    def Print(self):
+        print('p1_isLeft : {} \t gap_X : {} \t gap_Y : {} \t gap_HP_for_p1 : {} \t p1_canInputMove : {} \t p1_canInputAction : {}'.format(
+               self.list_feature[0], self.list_feature[1], self.list_feature[2], self.list_feature[3], self.list_feature[4], self.list_feature[5]))
+
+    def Send(self, _action):
+        msg = str(_action[0]) + '.' + str(_action[1])
+        self.client_socket.send(bytearray(msg, 'utf8'))
+
+    def Close(self):
+        self.client_socket.close()
+        print('=====')
+        print('server lost client : {}'.format(self.client_address))
+        print('=====')
