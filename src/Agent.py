@@ -18,7 +18,7 @@ class Agent:
         self.syncOps = self.main.GetSyncWeights('main', 'target')
         self.session.run(self.syncOps)
 
-        self.step_number = 0;
+        self.step_number = 0
         self.replay_buffer = collections.deque()
 
     def SetServer(self, _server):
@@ -47,6 +47,8 @@ class Agent:
         self.replay_buffer.append(listFloat)
         if len(self.replay_buffer) > 50000:
             self.replay_buffer.popleft()
+
+        return retVal
 
     def Action(self, _isRandom, _list = None):
         if _isRandom:
