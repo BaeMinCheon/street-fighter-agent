@@ -15,8 +15,9 @@ class Server:
         print('=====')
 
     def Accept(self):
-        self.client_socket, self.client_address = self.server_socket.accept()
         print('=====')
+        print('server waiting client...')
+        self.client_socket, self.client_address = self.server_socket.accept()
         print('server accepted client : {}'.format(self.client_address))
         print('=====')
 

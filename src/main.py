@@ -1,10 +1,8 @@
 import numpy as np
-import tensorflow as tf
-import DQN
-import random
-import collections
 
 import Server
+import Agent
+
 
 def GetStack(_main, _target, _batch):
     stackX = np.empty(0).reshape(0, _main.input_size)
@@ -20,22 +18,10 @@ def GetStack(_main, _target, _batch):
     return stackX, stackY
 
 def main():
+    a = Agent.Agent(_inputSize=4, _outputSize=2, _discount=0.9)
     s = Server.Server('127.0.0.1', 7000)
-
-
-    while True:
-        s.Accept()
-
-        while True:
-            if s.Receive():
-                s.Print()
-
-                #a.Train(s.GetFeatures())
-
-                #s.Send(a.Action())
-            else:
-                break
-
+    a.SetServer(s)
+    a.Run()
 
 if __name__ == '__main__':
     main()

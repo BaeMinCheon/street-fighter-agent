@@ -18,7 +18,7 @@ class DQN:
             weight01 = tf.get_variable(name='WEIGHT_01', shape=[self.input_size, _hiddenSize], initializer=tf.contrib.layers.xavier_initializer())
             output01 = tf.nn.tanh(tf.matmul(self.input, weight01))
 
-            weight02 = tf.get_variable(name='WEIGHT_02', shape=[_hiddenSize, self.input_size], initializer=tf.contrib.layers.xavier_initializer())
+            weight02 = tf.get_variable(name='WEIGHT_02', shape=[_hiddenSize, self.output_size], initializer=tf.contrib.layers.xavier_initializer())
             output02 = tf.matmul(output01, weight02)
 
             self.output = output02
@@ -34,6 +34,7 @@ class DQN:
         reshapedState = np.reshape(_state, [1, self.input_size])
         return self.session.run(self.output, feed_dict={self.input: reshapedState})
 
+    @staticmethod
     def GetSyncWeights(_srcNet = 'main', _dstNet = 'target'):
         srcVarList = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope=_srcNet)
         dstVarList = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope=_dstNet)
