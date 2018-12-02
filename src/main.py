@@ -18,7 +18,7 @@ def GetStack(_main, _target, _batch):
     return stackX, stackY
 
 def main():
-    a = Agent.Agent(_inputSize=4, _outputSize=2, _discount=0.9)
+    a = Agent.Agent(_inputSize=4, _outputSize=25, _discount=0.9)
     s = Server.Server('127.0.0.1', 7000)
     a.SetServer(s)
     a.Run()

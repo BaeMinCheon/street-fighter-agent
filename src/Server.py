@@ -42,7 +42,9 @@ class Server:
                self.list_feature[0], self.list_feature[1], self.list_feature[2], self.list_feature[3], self.list_feature[4], self.list_feature[5]))
 
     def Send(self, _action):
+        # print("action -> {}".format(_action))
         msg = str(_action[0]) + '.' + str(_action[1])
+        # msg = str(0) + '.' + str(0)
         self.client_socket.send(bytearray(msg, 'utf8'))
 
     def Close(self):
