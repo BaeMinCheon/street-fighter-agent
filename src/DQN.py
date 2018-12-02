@@ -4,7 +4,7 @@ import tensorflow as tf
 
 class DQN:
 
-    def __init__(self, _session, _inputSize, _outputSize, _discount, _netName = 'main'):
+    def __init__(self, _session, _inputSize, _outputSize, _discount, _netName):
         self.session = _session
         self.input_size = _inputSize
         self.output_size = _outputSize
