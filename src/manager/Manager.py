@@ -1,4 +1,9 @@
 
+import os
+import sys
+lib_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'agent'))
+sys.path.append(lib_path)
+
 import Agent
 
 class Manager:
