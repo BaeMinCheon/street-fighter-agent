@@ -5,9 +5,8 @@ import agent.Agent as Agent
 class Manager:
 
     def __init__(self):
-        print('Manager.__init__()')
         self.server = Server.Server('127.0.0.1', 7000)
-        self.agent = Agent.Agent()
+        self.agent = Agent.Agent(4, 25, 0.9)
 
     def Run(self):
         while True:

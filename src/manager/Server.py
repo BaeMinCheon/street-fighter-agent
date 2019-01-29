@@ -34,7 +34,7 @@ class Server:
     def GetList(self):
         return self.list
 
-    def PrintBuffer(self):
+    def PrintList(self):
         print('p1_isLeft : {} \t gap_X : {} \t gap_Y : {} \t gap_HP_for_p1 : {} \t p1_canInputMove : {} \t p1_canInputAction : {}'.format(
                self.list[0], self.list[1], self.list[2], self.list[3], self.list[4], self.list[5]))
 
