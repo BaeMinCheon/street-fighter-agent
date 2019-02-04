@@ -39,7 +39,7 @@ class Network:
         self.train = tf.train.AdamOptimizer(learning_rate=_learnRate).minimize(self.error)
 
     def Train(self, _x, _y):
-        pass
+        return self.session.run([self.error, self.train], feed_dict={self.input: _x, self.label: _y})
 
     def Predict(self, _state):
         reshapedState = np.reshape(_state, [1, self.size_input])

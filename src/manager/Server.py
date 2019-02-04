@@ -32,8 +32,7 @@ class Server:
             return False
 
     def GetList(self):
-        refinedList = [self.list[0], self.list[1], self.list[2], self.list[3]]
-        return refinedList
+        return self.list
 
     def PrintList(self):
         print('p1_isLeft : {} \t gap_X : {} \t gap_Y : {} \t gap_HP_for_p1 : {} \t p1_canInputMove : {} \t p1_canInputAction : {}'.format(

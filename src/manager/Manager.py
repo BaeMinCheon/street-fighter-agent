@@ -12,8 +12,8 @@ class Manager:
         while True:
             self.server.Accept()
             while True:
+                self.server.Send(self.agent.Output())
                 if self.server.Receive():
                     self.agent.Input(self.server.GetList())
-                    self.server.Send(self.agent.Output())
                 else:
                     break
