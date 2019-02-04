@@ -1,5 +1,6 @@
 
 import agent.Network as Network
+import numpy as np
 import tensorflow as tf
 import random
 
@@ -19,8 +20,18 @@ class Agent:
         self.sync_operation = Network.GetSyncWeights('main', 'target')
         self.session.run(self.sync_operation)
 
+        self.action = 0
+        self.number_train = 0
+
     def Input(self, _list):
-        pass
+        random_boundary = 1.0 / float(1 + self.number_train / 10)
+        if np.random.rand(1) < random_boundary:
+            rand = random.randrange(0, 25)
+            self.action = key_map[rand]
+        else:
+            predict = self.network_main.Predict(_list)
+            self.action = key_map[np.argmax(predict)]
+        self.number_train += 1
 
     def Output(self):
-        return key_map[random.randrange(0, 25)]
+        return self.action
