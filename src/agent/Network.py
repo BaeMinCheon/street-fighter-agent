@@ -42,4 +42,5 @@ class Network:
         pass
 
     def Predict(self, _state):
-        pass
+        reshapedState = np.reshape(_state, [1, self.size_input])
+        return self.session.run(self.output, feed_dict={self.input: reshapedState})
