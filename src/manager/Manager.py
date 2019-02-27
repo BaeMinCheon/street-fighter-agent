@@ -17,3 +17,9 @@ class Manager:
                     self.agent.Input(self.server.GetList())
                 else:
                     break
+
+    def Func1(self):
+        print('Manager.Func1()')
+
+    def Func2(self):
+        print('Manager.Func2()')
