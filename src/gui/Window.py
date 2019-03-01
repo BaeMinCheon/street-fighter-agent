@@ -16,12 +16,12 @@ class RootWidget(BoxLayout):
     def __init__(self, _manager):
         super(RootWidget, self).__init__()
 
-        self.b1 = Button(text='Run')
-        self.b1.on_press = _manager.Func1
+        self.b1 = Button(text='Server Start')
+        self.b1.on_press = _manager.OnClickStart
         self.add_widget(self.b1)
 
-        self.b2 = Button(text='Stop')
-        self.b2.on_press = _manager.Func2
+        self.b2 = Button(text='Server Stop')
+        self.b2.on_press = _manager.OnClickStop
         self.add_widget(self.b2)
 
 class Window(App):
