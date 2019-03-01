@@ -7,15 +7,20 @@ class Server:
         self.ip_server = _ip
         self.port_server = _port
         self.BUFSIZ = 1024
+        self.InitSocket()
+
+    def InitSocket(self):
         self.socket_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket_server.bind((self.ip_server, self.port_server))
         self.socket_server.listen(1)
-        print('===== server initialized =====')
 
     def Accept(self):
-        print('===== server waiting client =====')
-        self.socket_client, self.ip_client = self.socket_server.accept()
-        print('===== server accepted client : {} ====='.format(self.ip_client))
+        print('Server.Accept()')
+        try:
+            self.socket_client, self.ip_client = self.socket_server.accept()
+            print('> server accepted client : {}'.format(self.ip_client))
+        except OSError:
+            pass
 
     def Receive(self):
         try:
@@ -43,5 +48,12 @@ class Server:
         self.socket_client.send(bytearray(msg, 'utf8'))
 
     def Close(self):
-        self.socket_client.close()
-        print('===== server lost client : {} ====='.format(self.ip_client))
+        print('Server.Close()')
+        try:
+            self.socket_client.close()
+            del self.socket_client
+            print('> server lost client : {}'.format(self.ip_client))
+        except AttributeError:
+            self.socket_server.close()
+            print('> server cancelled accept')
+            self.InitSocket()
