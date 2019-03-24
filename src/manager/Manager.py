@@ -16,9 +16,10 @@ class Manager:
         while self.is_running:
             self.server.Send(self.agent.Output())
             if self.server.Receive():
-                self.agent.Input(self.server.GetList())
+                self.agent.Input(self.server.GetData())
             else:
                 break
+            #self.server.PrintData()
 
     def OnClickStart(self):
         t = Thread(target=self.Start)
