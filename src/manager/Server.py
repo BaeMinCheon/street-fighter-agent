@@ -1,5 +1,6 @@
 
 import socket
+import json
 
 class Server:
 
@@ -8,6 +9,7 @@ class Server:
         self.port_server = _port
         self.BUFSIZ = 1024
         self.InitSocket()
+        self.data = {}
 
     def InitSocket(self):
         self.socket_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -25,9 +27,8 @@ class Server:
     def Receive(self):
         try:
             self.buffer = self.socket_client.recv(self.BUFSIZ)
-            self.list = []
             if self.buffer:
-                self.list = self.buffer.decode('utf8').split('.')
+                self.data = json.loads(self.buffer.decode('utf-8'))
                 return True
             else:
                 self.Close()
@@ -36,12 +37,12 @@ class Server:
             self.Close()
             return False
 
-    def GetList(self):
-        return self.list
+    def GetData(self):
+        return self.data
 
-    def PrintList(self):
-        print('p1_isLeft : {} \t gap_X : {} \t gap_Y : {} \t gap_HP_for_p1 : {} \t p1_canInputMove : {} \t p1_canInputAction : {}'.format(
-               self.list[0], self.list[1], self.list[2], self.list[3], self.list[4], self.list[5]))
+    def PrintData(self):
+        for i in self.data:
+            print(i, ' : ', self.data[i])
 
     def Send(self, _action):
         msg = str(_action[0]) + '.' + str(_action[1])
