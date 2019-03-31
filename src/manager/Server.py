@@ -41,12 +41,14 @@ class Server:
         return self.data
 
     def PrintData(self):
+        log = ''
         for i in self.data:
-            print(i, ' : ', self.data[i])
+            log += i + ' : ' + str(self.data[i]) + ', '
+        print(log)
 
-    def Send(self, _action):
-        msg = str(_action[0]) + '.' + str(_action[1])
-        self.socket_client.send(bytearray(msg, 'utf8'))
+    def Send(self, _move, _action, _control = 0):
+        data = {'key_move': _move, 'key_action': _action, 'key_control': _control}
+        self.socket_client.send(json.dumps(data).encode('utf-8'))
 
     def Close(self):
         print('Server.Close()')

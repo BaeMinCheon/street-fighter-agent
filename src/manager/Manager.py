@@ -11,15 +11,24 @@ class Manager:
         self.server = Server.Server('127.0.0.1', 7000)
         self.agent = Agent.Agent(4, 25, 0.9)
         self.is_running = False
+        self.count_frame = 0
 
-    def Loop(self):
+    def Run(self):
+        self.count_frame = 0
+        self.server.Send(0, 0)
         while self.is_running:
-            self.server.Send(self.agent.Output())
+            self.count_frame += 1
             if self.server.Receive():
-                self.agent.Input(self.server.GetData())
+                self.server.PrintData()
+                control = self.ControlGame(self.server.GetData())
+                if len(control) > 0:
+                    self.server.Send(control[0], control[1], control[2])
+                else:
+                    self.agent.Input(self.server.GetData())
+                    output = self.agent.Output()
+                    self.server.Send(output[0], output[1])
             else:
                 break
-            #self.server.PrintData()
 
     def OnClickStart(self):
         t = Thread(target=self.Start)
@@ -36,10 +45,20 @@ class Manager:
         print('Manager.Start()')
         self.is_running = True
         self.server.Accept()
-        self.Loop()
+        self.Run()
 
     def Stop(self):
         print()
         print('Manager.Stop()')
         self.is_running = False
         self.server.Close()
+
+    def ControlGame(self, _data):
+        control = []
+        if(_data['timer'] == 0):
+            if(self.count_frame >= 100):
+                self.count_frame = 0
+                control = [0, 0, 2]
+            else:
+                control = [0, 0, 0]
+        return control

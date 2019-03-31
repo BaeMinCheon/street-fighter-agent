@@ -43,7 +43,7 @@ class Agent:
 
     def Input(self, _data):
         self.reward = _data['gap_hp_for_p1']
-        nextState = [_data['p1_isLeft'], _data['gap_x'], _data['gap_y'], _data['p1_canInputAction']]
+        nextState = [_data['p1_is_left'], _data['gap_x'], _data['gap_y'], _data['p1_can_input_action']]
         self.deque_replay.append((self.state, self.action, self.reward, nextState))
         self.state = nextState
         if self.number_action % 1000 == 999:
