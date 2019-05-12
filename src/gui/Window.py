@@ -17,26 +17,30 @@ class RootWidget(BoxLayout):
 
     def __init__(self, _manager):
         super(RootWidget, self).__init__()
+        self.manager = _manager
+        self.manager.widget = self
 
-        self.b1 = Button(text='Server Start')
-        self.b1.on_press = _manager.OnClickStart
+        self.b1 = Button(text='Server Start', size_hint=(1.0, 0.5))
+        self.b1.on_press = self.manager.OnClickStart
         self.add_widget(self.b1)
 
-        self.b2 = Button(text='Server Stop')
-        self.b2.on_press = _manager.OnClickStop
+        self.b2 = Button(text='Server Stop',  size_hint=(1.0, 0.5))
+        self.b2.on_press = self.manager.OnClickStop
         self.add_widget(self.b2)
 
         self.tb1 = TextInput(text='''# write code controlling the game
-control = []
 if(_data['timer'] == 0):
     if(self.count_frame >= 100):
         self.count_frame = 0
         control = [0, 0, 2]
     else:
-        control = [0, 0, 0]
-return control
-        ''')
+        control = [0, 0, 0]''', size_hint=(1.0, 0.5))
         self.add_widget(self.tb1)
+
+        self.b3 = Button(text='Update Code')
+        self.b3.on_press = self.manager.UpdateCode
+        self.add_widget(self.b3)
+        self.manager.UpdateCode
 
 class Window(App):
 

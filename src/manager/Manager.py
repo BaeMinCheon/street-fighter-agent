@@ -10,8 +10,10 @@ class Manager:
     def __init__(self):
         self.server = Server.Server('127.0.0.1', 7000)
         self.agent = Agent.Agent(4, 25, 0.9)
+        self.widget = None
         self.is_running = False
         self.count_frame = 0
+        self.control_code = ""
 
     def Run(self):
         self.count_frame = 0
@@ -53,12 +55,19 @@ class Manager:
         self.is_running = False
         self.server.Close()
 
+    def UpdateCode(self):
+        self.control_code = self.widget.tb1.text
+
     def ControlGame(self, _data):
         control = []
-        if(_data['timer'] == 0):
-            if(self.count_frame >= 100):
-                self.count_frame = 0
-                control = [0, 0, 2]
-            else:
-                control = [0, 0, 0]
+        exec(self.control_code)
         return control
+
+        # control = []
+        # if(_data['timer'] == 0):
+        #     if(self.count_frame >= 100):
+        #         self.count_frame = 0
+        #         control = [0, 0, 2]
+        #     else:
+        #         control = [0, 0, 0]
+        # return control
