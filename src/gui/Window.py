@@ -36,11 +36,11 @@ if(_data['timer'] == 0):
     else:
         control = [0, 0, 0]''', size_hint=(1.0, 0.5))
         self.add_widget(self.tb1)
+        self.manager.UpdateCode()
 
         self.b3 = Button(text='Update Code')
         self.b3.on_press = self.manager.UpdateCode
         self.add_widget(self.b3)
-        self.manager.UpdateCode
 
 class Window(App):
 
