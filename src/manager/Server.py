@@ -10,6 +10,7 @@ class Server:
         self.BUFSIZ = 1024
         self.InitSocket()
         self.data = {}
+        self.count_print = 0
 
     def InitSocket(self):
         self.socket_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -41,10 +42,13 @@ class Server:
         return self.data
 
     def PrintData(self):
-        log = ''
-        for i in self.data:
-            log += i + ' : ' + str(self.data[i]) + ', '
-        print(log)
+        self.count_print += 1
+        if self.count_print is 30:
+            self.count_print = 0
+            log = ''
+            for i in self.data:
+                log += i + ' : ' + str(self.data[i]) + ', '
+            print(log)
 
     def Send(self, _move, _action, _control = 0):
         data = {'key_move': _move, 'key_action': _action, 'key_control': _control}
