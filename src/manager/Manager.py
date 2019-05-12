@@ -63,12 +63,3 @@ class Manager:
         locals = {'self': self, '_data': _data, 'control': control}
         exec(self.control_code, {}, locals)
         return locals['control']
-
-        # control = []
-        # if(_data['timer'] == 0):
-        #     if(self.count_frame >= 100):
-        #         self.count_frame = 0
-        #         control = [0, 0, 2]
-        #     else:
-        #         control = [0, 0, 0]
-        # return control

@@ -30,7 +30,7 @@ class RootWidget(BoxLayout):
 
         self.tb1 = TextInput(text='''# write code controlling the game
 if(_data['timer'] == 0):
-    if(self.count_frame >= 100):
+    if(self.count_frame >= 60):
         self.count_frame = 0
         control = [0, 0, 2]
     else:
