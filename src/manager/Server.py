@@ -51,8 +51,11 @@ class Server:
             print(log)
 
     def Send(self, _move, _action, _control = 0):
-        data = {'key_move': _move, 'key_action': _action, 'key_control': _control}
-        self.socket_client.send(json.dumps(data).encode('utf-8'))
+        try:
+            data = {'key_move': _move, 'key_action': _action, 'key_control': _control}
+            self.socket_client.send(json.dumps(data).encode('utf-8'))
+        except AttributeError:
+            pass
 
     def Close(self):
         print('Server.Close()')
