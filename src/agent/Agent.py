@@ -42,8 +42,8 @@ class Agent:
         self.deque_replay = collections.deque()
 
     def Input(self, _data):
-        self.reward = _data['gap_hp_for_p1']
-        nextState = [_data['p1_is_left'], _data['gap_x'], _data['gap_y'], _data['p1_can_input_action']]
+        self.reward = _data['Gap.HP.P1']
+        nextState = [_data['P1.IsLeft'], _data['Gap.X'], _data['Gap.Y'], _data['P1.CanAction']]
         self.deque_replay.append((self.state, self.action, self.reward, nextState))
         self.state = nextState
         if self.number_action % 1000 == 999:
