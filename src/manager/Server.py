@@ -52,7 +52,7 @@ class Server:
 
     def Send(self, _move, _action, _control = 0):
         try:
-            data = {'key_move': _move, 'key_action': _action, 'key_control': _control}
+            data = {'Move': _move, 'Action': _action, 'Control': _control}
             self.socket_client.send(json.dumps(data).encode('utf-8'))
         except AttributeError:
             pass
