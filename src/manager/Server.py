@@ -18,11 +18,11 @@ class Server:
         self.socket_server.listen(1)
 
     def Accept(self):
-        print('Server.Accept()')
         try:
             self.socket_client, self.ip_client = self.socket_server.accept()
             print('> server accepted client : {}'.format(self.ip_client))
-        except OSError:
+        except OSError as error:
+            #print('> server failed to accept client, error:' + str(error))
             pass
 
     def Receive(self):
@@ -34,7 +34,8 @@ class Server:
             else:
                 self.Close()
                 return False
-        except socket.error:
+        except socket.error as error:
+            #print('> server failed to receive data, error:' + str(error))
             self.Close()
             return False
 
@@ -47,14 +48,15 @@ class Server:
             self.count_print = 0
             log = ''
             for i in self.data:
-                log += i + ' : ' + str(self.data[i]) + ', '
+                log += i + ' = ' + str(self.data[i]) + '    /    '
             print(log)
 
-    def Send(self, _move, _action, _control = 0):
+    def Send(self, _action = [0, 0, 0]):
         try:
-            data = {'Move': _move, 'Action': _action, 'Control': _control}
+            data = {'Move': _action[0], 'Action': _action[1], 'Control': _action[2]}
             self.socket_client.send(json.dumps(data).encode('utf-8'))
-        except AttributeError:
+        except AttributeError as error:
+            #print('> server failed to send data, error:' + str(error))
             pass
 
     def Close(self):
@@ -63,7 +65,7 @@ class Server:
             self.socket_client.close()
             del self.socket_client
             print('> server lost client : {}'.format(self.ip_client))
-        except AttributeError:
+        except AttributeError as error:
+            #print('> server failed to close socket, error:' + str(error))
             self.socket_server.close()
-            print('> server cancelled accept')
             self.InitSocket()
