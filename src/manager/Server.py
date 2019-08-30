@@ -39,9 +39,6 @@ class Server:
             self.Close()
             return False
 
-    def GetData(self):
-        return self.data
-
     def PrintData(self):
         self.count_print += 1
         if self.count_print is 30:

@@ -2,16 +2,6 @@
 import numpy as np
 import tensorflow as tf
 
-def GetSyncWeights(_srcNet = 'main', _dstNet = 'target'):
-    srcVarList = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope=_srcNet)
-    dstVarList = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope=_dstNet)
-
-    opList = []
-    for srcVar, dstVar in zip(srcVarList, dstVarList):
-        opList.append(dstVar.assign(srcVar.value()))
-
-    return opList
-
 class Network:
 
     def __init__(self, _session, _inputSize, _outputSize, _discount, _netName):

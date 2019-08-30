@@ -33,7 +33,7 @@ class Manager:
             self.count_frame += 1
             if self.server.Receive():
                 self.server.PrintData()
-                feature = self.PreProcess(self.server.GetData())
+                feature = self.PreProcess(self.server.data)
                 need_agent, control = self.NeedAgent(feature)
                 if need_agent:
                     self.agent.Input(feature)
@@ -70,7 +70,7 @@ class Manager:
         self.server.Close()
 
     def UpdateCode(self):
-        self.widget.tb1.text = self.control_code
+        self.control_code = self.widget.tb1.text
 
     def PreProcess(self, _input):
         feature = {}

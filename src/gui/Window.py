@@ -30,7 +30,7 @@ class RootWidget(BoxLayout):
 
         self.tb1 = TextInput(text='# Empty', size_hint=(1.0, 0.5))
         self.add_widget(self.tb1)
-        self.manager.UpdateCode()
+        self.tb1.text = self.manager.control_code
 
         self.b3 = Button(text='Update Code')
         self.b3.on_press = self.manager.UpdateCode
