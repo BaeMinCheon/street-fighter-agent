@@ -20,15 +20,30 @@ class RootWidget(BoxLayout):
         self.manager = _manager
         self.manager.widget = self
 
-        self.b1 = Button(text='Server Start', size_hint=(1.0, 0.5))
+        self.orientation = 'vertical'
+        self.spacing = 10
+
+class ControlWidget(BoxLayout):
+
+    def __init__(self, _manager):
+        super(ControlWidget, self).__init__()
+        self.manager = _manager
+
+        self.b1 = Button(text='Server Start')
         self.b1.on_press = self.manager.OnClickStart
         self.add_widget(self.b1)
 
-        self.b2 = Button(text='Server Stop',  size_hint=(1.0, 0.5))
+        self.b2 = Button(text='Server Stop')
         self.b2.on_press = self.manager.OnClickStop
         self.add_widget(self.b2)
 
-        self.tb1 = TextInput(text='# Empty', size_hint=(1.0, 0.5))
+class ConfigWidget(BoxLayout):
+
+    def __init__(self, _manager):
+        super(ConfigWidget, self).__init__()
+        self.manager = _manager
+
+        self.tb1 = TextInput(text='# Empty')
         self.add_widget(self.tb1)
         self.tb1.text = self.manager.control_code
 
@@ -43,4 +58,7 @@ class Window(App):
         self.manager = _manager
 
     def build(self):
-        return RootWidget(self.manager)
+        root = RootWidget(self.manager)
+        root.add_widget(ControlWidget(self.manager))
+        root.add_widget(ConfigWidget(self.manager))
+        return root
