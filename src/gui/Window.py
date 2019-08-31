@@ -29,6 +29,8 @@ class ControlWidget(BoxLayout):
         super(ControlWidget, self).__init__()
         self.manager = _manager
 
+        self.spacing = 10
+
         self.b1 = Button(text='Server Start')
         self.b1.on_press = self.manager.OnClickStart
         self.add_widget(self.b1)
@@ -42,6 +44,8 @@ class ConfigWidget(BoxLayout):
     def __init__(self, _manager):
         super(ConfigWidget, self).__init__()
         self.manager = _manager
+
+        self.spacing = 10
 
         self.tb1 = TextInput(text='# Empty')
         self.add_widget(self.tb1)
