@@ -3,7 +3,7 @@ import manager.Manager as Manager
 import gui.Window as Window
 
 def main():
-    print("main()")
+    print('main()')
     m = Manager.Manager()
     w = Window.Window(m)
     w.run()
