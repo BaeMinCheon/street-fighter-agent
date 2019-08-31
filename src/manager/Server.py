@@ -41,7 +41,7 @@ class Server:
 
     def PrintData(self):
         self.count_print += 1
-        if self.count_print is 30:
+        if self.count_print == 30:
             self.count_print = 0
             log = ''
             for i in self.data:
