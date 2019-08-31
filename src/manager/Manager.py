@@ -70,7 +70,13 @@ class Manager:
         self.server.Close()
 
     def UpdateCode(self):
-        self.control_code = self.widget.tb1.text
+        self.control_code = self.widget.control.textinput_control.text
+
+    def UpdateIP(self):
+        self.server.ip_server = self.widget.control.socket.textinput_ip.text
+
+    def UpdatePort(self):
+        self.server.port_server = int(self.widget.control.socket.textinput_port.text)
 
     def PreProcess(self, _input):
         feature = {}
