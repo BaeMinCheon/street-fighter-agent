@@ -4,14 +4,23 @@ import kivy.app
 import kivy.uix.button
 import kivy.uix.boxlayout
 import kivy.uix.gridlayout
+import kivy.uix.floatlayout
 import kivy.uix.textinput
+import kivy.uix.popup
+import kivy.properties
+import kivy.factory
+import os
 
 Config = kivy.config.Config
 App = kivy.app.App
 Button = kivy.uix.button.Button
 BoxLayout = kivy.uix.boxlayout.BoxLayout
 GridLayout = kivy.uix.gridlayout.GridLayout
+FloatLayout = kivy.uix.floatlayout.FloatLayout
 TextInput = kivy.uix.textinput.TextInput
+Popup = kivy.uix.popup.Popup
+ObjectProperty = kivy.properties.ObjectProperty
+Factory = kivy.factory.Factory
 
 Config.set('input', 'mouse', 'mouse,disable_multitouch')
 
@@ -37,6 +46,7 @@ class RootWidget(BoxLayout):
 
         self.config.textinput_control.disabled = True
         self.config.button_update.disabled = True
+        self.config.button_load.disabled = True
 
     def OnStop(self):
         self.control.button_start.disabled = False
@@ -48,6 +58,7 @@ class RootWidget(BoxLayout):
 
         self.config.textinput_control.disabled = False
         self.config.button_update.disabled = False
+        self.config.button_load.disabled = False
 
 class ControlWidget(BoxLayout):
 
@@ -55,8 +66,6 @@ class ControlWidget(BoxLayout):
         super(ControlWidget, self).__init__()
         self.manager = _manager
         self.socket = None
-
-        self.spacing = 10
 
         self.button_start = Button(text='Start')
         self.button_start.on_press = self.manager.OnClickStart
@@ -73,7 +82,6 @@ class SocketWidget(GridLayout):
         self.manager = _manager
 
         self.cols = 2
-        self.spacing = 10
 
         self.textinput_ip = TextInput(text='127.0.0.1')
         self.add_widget(self.textinput_ip)
@@ -95,20 +103,40 @@ class ConfigWidget(BoxLayout):
         super(ConfigWidget, self).__init__()
         self.manager = _manager
 
-        self.spacing = 10
-
         self.textinput_control = TextInput(text='# Empty')
         self.add_widget(self.textinput_control)
         self.textinput_control.text = self.manager.control_code
 
+        layout = BoxLayout(orientation='vertical')
         self.button_update = Button(text='Update Code')
         self.button_update.on_press = self.manager.OnClickUpdateCode
-        self.add_widget(self.button_update)
+        layout.add_widget(self.button_update)
+        self.button_load = Button(text='Load Code')
+        self.button_load.on_press = self.ShowLoadDialog
+        layout.add_widget(self.button_load)
+        self.add_widget(layout)
 
-class Window(App):
+    def ShowLoadDialog(self):
+        content = LoadDialog(load=self.Load, cancel=self.DismissLoadDialog)
+        self.popup = Popup(title='Load File', content=content, size_hint=(0.9, 0.9))
+        self.popup.open()
+
+    def DismissLoadDialog(self):
+        self.popup.dismiss()
+
+    def Load(self, _path, _filename):
+        with open(os.path.join(_path, _filename[0])) as stream:
+            self.textinput_control.text = stream.read()
+        self.DismissLoadDialog()
+
+class LoadDialog(FloatLayout):
+    load = ObjectProperty(None)
+    cancel = ObjectProperty(None)
+
+class Widget(App):
 
     def __init__(self, _manager):
-        super(Window, self).__init__()
+        super(Widget, self).__init__()
         self.manager = _manager
 
     def build(self):
@@ -126,3 +154,5 @@ class Window(App):
         control.socket = socket
 
         return root
+
+Factory.register('LoadDialog', cls=LoadDialog)

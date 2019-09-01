@@ -10,16 +10,7 @@ Thread = threading.Thread
 class Manager:
 
     def __init__(self):
-        manager_directory = os.path.dirname(os.path.realpath(__file__))
-        script_directory = os.path.join(manager_directory, 'scripts')
-        preprocess_path = os.path.join(script_directory, 'preprocess.code')
-        control_path = os.path.join(script_directory, 'control.code')
-        keymap_path = os.path.join(script_directory, 'keymap.json')
-        self.preprocess_code = open(preprocess_path, 'r').read()
-        self.control_code = open(control_path, 'r').read()
-        keymap_string = open(keymap_path, 'r').read()
-        self.keymap = json.loads(keymap_string)['keymap']
-
+        self.LoadConfig()
         self.server = Server.Server('127.0.0.1', 7000)
         self.agent = Agent.Agent(4, len(self.keymap), 0.9)
         self.widget = None
@@ -61,7 +52,7 @@ class Manager:
         self.widget.OnStop()
 
     def OnClickUpdateCode(self):
-        self.control_code = self.widget.control.textinput_control.text
+        self.control_code = self.widget.config.textinput_control.text
 
     def OnClickUpdateIP(self):
         self.server.ip_server = self.widget.control.socket.textinput_ip.text
@@ -102,3 +93,14 @@ class Manager:
             return _output
         else:
             return self.keymap[_output]
+
+    def LoadConfig(self):
+        manager_directory = os.path.dirname(os.path.realpath(__file__))
+        script_directory = os.path.join(manager_directory, 'scripts')
+        preprocess_path = os.path.join(script_directory, 'preprocess.code')
+        control_path = os.path.join(script_directory, 'control.code')
+        keymap_path = os.path.join(script_directory, 'keymap.json')
+        self.preprocess_code = open(preprocess_path, 'r').read()
+        self.control_code = open(control_path, 'r').read()
+        keymap_string = open(keymap_path, 'r').read()
+        self.keymap = json.loads(keymap_string)['keymap']
