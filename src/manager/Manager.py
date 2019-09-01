@@ -50,11 +50,24 @@ class Manager:
         t = Thread(target=self.Start)
         t.daemon = True
         t.start()
+        
+        self.widget.OnStart()
 
     def OnClickStop(self):
         t = Thread(target=self.Stop)
         t.daemon = True
         t.start()
+
+        self.widget.OnStop()
+
+    def OnClickUpdateCode(self):
+        self.control_code = self.widget.control.textinput_control.text
+
+    def OnClickUpdateIP(self):
+        self.server.ip_server = self.widget.control.socket.textinput_ip.text
+
+    def OnClickUpdatePort(self):
+        self.server.port_server = int(self.widget.control.socket.textinput_port.text)
 
     def Start(self):
         print()
@@ -68,15 +81,6 @@ class Manager:
         print('Manager.Stop()')
         self.is_running = False
         self.server.Close()
-
-    def UpdateCode(self):
-        self.control_code = self.widget.control.textinput_control.text
-
-    def UpdateIP(self):
-        self.server.ip_server = self.widget.control.socket.textinput_ip.text
-
-    def UpdatePort(self):
-        self.server.port_server = int(self.widget.control.socket.textinput_port.text)
 
     def PreProcess(self, _input):
         feature = {}
