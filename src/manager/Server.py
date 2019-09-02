@@ -7,7 +7,7 @@ class Server:
     def __init__(self, _ip, _port):
         self.ip_server = _ip
         self.port_server = _port
-        self.BUFSIZ = 1024
+        self.buffer_size = 1024
         self.InitSocket()
         self.data = {}
         self.count_print = 0
@@ -27,7 +27,7 @@ class Server:
 
     def Receive(self):
         try:
-            self.buffer = self.socket_client.recv(self.BUFSIZ)
+            self.buffer = self.socket_client.recv(self.buffer_size)
             if self.buffer:
                 self.data = json.loads(self.buffer.decode('utf-8'))
                 return True
@@ -41,7 +41,7 @@ class Server:
 
     def PrintData(self):
         self.count_print += 1
-        if self.count_print is 30:
+        if self.count_print == 30:
             self.count_print = 0
             log = ''
             for i in self.data:

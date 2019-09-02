@@ -10,16 +10,7 @@ Thread = threading.Thread
 class Manager:
 
     def __init__(self):
-        manager_directory = os.path.dirname(os.path.realpath(__file__))
-        script_directory = os.path.join(manager_directory, 'scripts')
-        preprocess_path = os.path.join(script_directory, 'preprocess.code')
-        control_path = os.path.join(script_directory, 'control.code')
-        keymap_path = os.path.join(script_directory, 'keymap.json')
-        self.preprocess_code = open(preprocess_path, 'r').read()
-        self.control_code = open(control_path, 'r').read()
-        keymap_string = open(keymap_path, 'r').read()
-        self.keymap = json.loads(keymap_string)['keymap']
-
+        self.LoadConfig()
         self.server = Server.Server('127.0.0.1', 7000)
         self.agent = Agent.Agent(4, len(self.keymap), 0.9)
         self.widget = None
@@ -50,11 +41,24 @@ class Manager:
         t = Thread(target=self.Start)
         t.daemon = True
         t.start()
+        
+        self.widget.OnStart()
 
     def OnClickStop(self):
         t = Thread(target=self.Stop)
         t.daemon = True
         t.start()
+
+        self.widget.OnStop()
+
+    def OnClickUpdateCode(self):
+        self.control_code = self.widget.config.textinput_control.text
+
+    def OnClickUpdateIP(self):
+        self.server.ip_server = self.widget.control.socket.textinput_ip.text
+
+    def OnClickUpdatePort(self):
+        self.server.port_server = int(self.widget.control.socket.textinput_port.text)
 
     def Start(self):
         print()
@@ -68,9 +72,6 @@ class Manager:
         print('Manager.Stop()')
         self.is_running = False
         self.server.Close()
-
-    def UpdateCode(self):
-        self.control_code = self.widget.tb1.text
 
     def PreProcess(self, _input):
         feature = {}
@@ -92,3 +93,14 @@ class Manager:
             return _output
         else:
             return self.keymap[_output]
+
+    def LoadConfig(self):
+        manager_directory = os.path.dirname(os.path.realpath(__file__))
+        script_directory = os.path.join(manager_directory, 'scripts')
+        preprocess_path = os.path.join(script_directory, 'preprocess.code')
+        control_path = os.path.join(script_directory, 'control.code')
+        keymap_path = os.path.join(script_directory, 'keymap.json')
+        self.preprocess_code = open(preprocess_path, 'r').read()
+        self.control_code = open(control_path, 'r').read()
+        keymap_string = open(keymap_path, 'r').read()
+        self.keymap = json.loads(keymap_string)['keymap']

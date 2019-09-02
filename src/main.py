@@ -1,11 +1,10 @@
 
 import manager.Manager as Manager
-import gui.Window as Window
+import gui.Widget as Widget
 
 def main():
-    print('main()')
     m = Manager.Manager()
-    w = Window.Window(m)
+    w = Widget.Widget(m)
     w.run()
 
 if __name__ == '__main__':
