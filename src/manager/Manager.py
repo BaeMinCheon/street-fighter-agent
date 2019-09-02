@@ -98,9 +98,7 @@ class Manager:
         manager_directory = os.path.dirname(os.path.realpath(__file__))
         script_directory = os.path.join(manager_directory, 'scripts')
         preprocess_path = os.path.join(script_directory, 'preprocess.code')
-        control_path = os.path.join(script_directory, 'control.code')
         keymap_path = os.path.join(script_directory, 'keymap.json')
         self.preprocess_code = open(preprocess_path, 'r').read()
-        self.control_code = open(control_path, 'r').read()
         keymap_string = open(keymap_path, 'r').read()
         self.keymap = json.loads(keymap_string)['keymap']

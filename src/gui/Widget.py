@@ -45,7 +45,7 @@ class RootWidget(BoxLayout):
         self.control.socket.button_port.disabled = True
 
         self.config.textinput_control.disabled = True
-        self.config.button_update.disabled = True
+        self.manager.control_code = self.config.textinput_control.text
         self.config.button_load.disabled = True
 
     def OnStop(self):
@@ -57,7 +57,6 @@ class RootWidget(BoxLayout):
         self.control.socket.button_port.disabled = False
 
         self.config.textinput_control.disabled = False
-        self.config.button_update.disabled = False
         self.config.button_load.disabled = False
 
 class ControlWidget(BoxLayout):
@@ -105,16 +104,10 @@ class ConfigWidget(BoxLayout):
 
         self.textinput_control = TextInput(text='# Empty')
         self.add_widget(self.textinput_control)
-        self.textinput_control.text = self.manager.control_code
 
-        layout = BoxLayout(orientation='vertical')
-        self.button_update = Button(text='Update Code')
-        self.button_update.on_press = self.manager.OnClickUpdateCode
-        layout.add_widget(self.button_update)
         self.button_load = Button(text='Load Code')
         self.button_load.on_press = self.ShowLoadDialog
-        layout.add_widget(self.button_load)
-        self.add_widget(layout)
+        self.add_widget(self.button_load)
 
     def ShowLoadDialog(self):
         content = LoadDialog(load=self.Load, cancel=self.DismissLoadDialog)
