@@ -1,11 +1,8 @@
 
-import threading
 import manager.Server as Server
 import agent.Agent as Agent
 import os
 import json
-
-Thread = threading.Thread
 
 class Manager:
 
@@ -16,6 +13,7 @@ class Manager:
         self.widget = None
         self.is_running = False
         self.count_frame = 0
+        self.control_code = ''
 
     def Run(self):
         self.count_frame = 0
@@ -36,29 +34,6 @@ class Manager:
                     self.server.Send(action)
             else:
                 break
-
-    def OnClickStart(self):
-        t = Thread(target=self.Start)
-        t.daemon = True
-        t.start()
-        
-        self.widget.OnStart()
-
-    def OnClickStop(self):
-        t = Thread(target=self.Stop)
-        t.daemon = True
-        t.start()
-
-        self.widget.OnStop()
-
-    def OnClickUpdateCode(self):
-        self.control_code = self.widget.config.textinput_control.text
-
-    def OnClickUpdateIP(self):
-        self.server.ip_server = self.widget.control.socket.textinput_ip.text
-
-    def OnClickUpdatePort(self):
-        self.server.port_server = int(self.widget.control.socket.textinput_port.text)
 
     def Start(self):
         print()
@@ -98,9 +73,7 @@ class Manager:
         manager_directory = os.path.dirname(os.path.realpath(__file__))
         script_directory = os.path.join(manager_directory, 'scripts')
         preprocess_path = os.path.join(script_directory, 'preprocess.code')
-        control_path = os.path.join(script_directory, 'control.code')
         keymap_path = os.path.join(script_directory, 'keymap.json')
         self.preprocess_code = open(preprocess_path, 'r').read()
-        self.control_code = open(control_path, 'r').read()
         keymap_string = open(keymap_path, 'r').read()
         self.keymap = json.loads(keymap_string)['keymap']

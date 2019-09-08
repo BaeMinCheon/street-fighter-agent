@@ -1,6 +1,7 @@
 
 import socket
 import json
+import os
 
 class Server:
 
@@ -46,6 +47,7 @@ class Server:
             log = ''
             for i in self.data:
                 log += i + ' = ' + str(self.data[i]) + '    /    '
+            os.system('cls')
             print(log)
 
     def Send(self, _action = [0, 0, 0]):
