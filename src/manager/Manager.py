@@ -1,19 +1,18 @@
 
 import manager.Server as Server
 import agent.Agent as Agent
-import os
-import json
 
 class Manager:
 
     def __init__(self):
-        self.LoadConfig()
         self.server = Server.Server('127.0.0.1', 7000)
-        self.agent = Agent.Agent(4, len(self.keymap), 0.9)
+        self.agent = None
         self.widget = None
         self.is_running = False
         self.count_frame = 0
+        self.preprocess_code = ''
         self.control_code = ''
+        self.keymap = []
 
     def Run(self):
         self.count_frame = 0
@@ -34,19 +33,21 @@ class Manager:
                     self.server.Send(action)
             else:
                 break
+        self.server.Close()
 
     def Start(self):
         print()
         print('Manager.Start()')
         self.is_running = True
+        self.server.InitSocket()
         self.server.Accept()
+        self.agent = Agent.Agent(4, len(self.keymap), 0.9)
         self.Run()
 
     def Stop(self):
         print()
         print('Manager.Stop()')
         self.is_running = False
-        self.server.Close()
 
     def PreProcess(self, _input):
         feature = {}
@@ -68,12 +69,3 @@ class Manager:
             return _output
         else:
             return self.keymap[_output]
-
-    def LoadConfig(self):
-        manager_directory = os.path.dirname(os.path.realpath(__file__))
-        script_directory = os.path.join(manager_directory, 'scripts')
-        preprocess_path = os.path.join(script_directory, 'preprocess.code')
-        keymap_path = os.path.join(script_directory, 'keymap.json')
-        self.preprocess_code = open(preprocess_path, 'r').read()
-        keymap_string = open(keymap_path, 'r').read()
-        self.keymap = json.loads(keymap_string)['keymap']

@@ -8,8 +8,8 @@ class Server:
     def __init__(self, _ip, _port):
         self.ip_server = _ip
         self.port_server = _port
+        self.socket_server = None
         self.buffer_size = 1024
-        self.InitSocket()
         self.data = {}
         self.count_print = 0
 
@@ -66,5 +66,5 @@ class Server:
             print('> server lost client : {}'.format(self.ip_client))
         except AttributeError as error:
             #print('> server failed to close socket, error:' + str(error))
-            self.socket_server.close()
-            self.InitSocket()
+            if self.socket_server is not None:
+                self.socket_server.close()

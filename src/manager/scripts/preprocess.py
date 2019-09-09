@@ -5,7 +5,7 @@ if data['P1.IsAttacking.Raw'] >= 256:
     feature['P1.IsAttacking'] = 1
 else:
     feature['P1.IsAttacking'] = 0
-if data['P1.IsHitting.Raw'] > 256:
+if data['P1.IsHitting.Raw'] >= 256:
     feature['P1.IsHitting'] = 1
 else:
     feature['P1.IsHitting'] = 0

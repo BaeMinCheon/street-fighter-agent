@@ -12,6 +12,7 @@ import kivy.properties
 import kivy.factory
 import os
 import threading
+import json
 
 Config = kivy.config.Config
 App = kivy.app.App
@@ -41,17 +42,19 @@ class RootWidget(BoxLayout):
         self.server.button_start.disabled = True
         self.server.button_stop.disabled = False
         self.server.textinput_ip.disabled = True
-        self.manager.ip_server = self.server.textinput_ip.text
+        self.manager.server.ip_server = self.server.textinput_ip.text
         self.server.textinput_port.disabled = True
-        self.manager.port_server = int(self.server.textinput_port.text)
+        self.manager.server.port_server = int(self.server.textinput_port.text)
 
         self.config.button_load_preprocess.disabled = True
         self.config.textinput_preprocess.disabled = True
+        self.manager.preprocess_code = self.config.textinput_preprocess.text
         self.config.button_load_control.disabled = True
         self.config.textinput_control.disabled = True
         self.manager.control_code = self.config.textinput_control.text
         self.config.button_load_keymap.disabled = True
         self.config.textinput_keymap.disabled = True
+        self.manager.keymap = json.loads(self.config.textinput_keymap.text)['keymap']
 
         t = Thread(target=self.manager.Start)
         t.daemon = True
