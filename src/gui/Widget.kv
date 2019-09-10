@@ -4,22 +4,49 @@
     spacing: 10
 
 <ServerWidget>:
-    button_start: button_start
-    button_stop: button_stop
+    button_start_server: button_start_server
+    button_stop_server: button_stop_server
+    button_init_agent: button_init_agent
+    button_load_network: button_load_network
+    button_save_network: button_save_network
     textinput_ip: textinput_ip
     textinput_port: textinput_port
+    label_train_check: label_train_check
 
+    size_hint_y: 0.2
     orientation: 'horizontal'
 
-    Button:
-        id: button_start
-        text: 'Start Server'
-        on_release: root.func_start()
-    Button:
-        id: button_stop
-        text: 'Stop Server'
-        on_release: root.func_stop()
-        disabled: True
+    GridLayout:
+        cols: 2
+
+        Button:
+            id: button_start_server
+            text: 'Start Server'
+            on_release: root.func_start()
+            disabled: True
+        Button:
+            id: button_stop_server
+            text: 'Stop Server'
+            on_release: root.func_stop()
+            disabled: True
+        Button:
+            id: button_init_agent
+            text: 'Initialize Agent'
+            on_release: root.OnClickInitializeAgent()
+            disabled: True
+        Button:
+            id: button_load_network
+            text: 'Load Network'
+            on_release: root.OnClickLoadNetwork()
+            disabled: True
+        Button:
+            id: button_save_network
+            text: 'Save Network'
+            on_release: root.OnClickSaveNetwork()
+            disabled: True
+        Label:
+            id: label_train_check
+            text: 'Agent Status : NaN'
 
     GridLayout:
         cols: 2
@@ -38,10 +65,12 @@
 <ConfigWidget>:
     button_load_preprocess: button_load_preprocess
     button_load_control: button_load_control
-    button_load_keymap: button_load_keymap
+    button_load_agent_config: button_load_agent_config
+    button_load_network: button_load_network
     textinput_preprocess: textinput_preprocess
     textinput_control: textinput_control
-    textinput_keymap: textinput_keymap
+    textinput_agent_config: textinput_agent_config
+    textinput_network: textinput_network
 
     cols: 2
 
@@ -49,20 +78,26 @@
         id: textinput_preprocess
     Button:
         id: button_load_preprocess
-        text: 'Load Preprocess'
-        on_release: root.ShowLoadDialog(textinput_preprocess)
+        text: 'Load Preprocess Code'
+        on_release: root.ShowLoadDialog(textinput_preprocess, root.OnSuccessLoadPreprocessCode)
     TextInput:
         id: textinput_control
     Button:
         id: button_load_control
-        text: 'Load Control'
-        on_release: root.ShowLoadDialog(textinput_control)
+        text: 'Load Control Code'
+        on_release: root.ShowLoadDialog(textinput_control, root.OnSuccessLoadControlCode)
     TextInput:
-        id: textinput_keymap
+        id: textinput_agent_config
     Button:
-        id: button_load_keymap
-        text: 'Load Keymap'
-        on_release: root.ShowLoadDialog(textinput_keymap)
+        id: button_load_agent_config
+        text: 'Load Agent Config'
+        on_release: root.ShowLoadDialog(textinput_agent_config, root.OnSuccessLoadAgentConfig)
+    TextInput:
+        id: textinput_network
+    Button:
+        id: button_load_network
+        text: 'Load Network Code'
+        on_release: root.ShowLoadDialog(textinput_network, root.OnSuccessLoadNetworkCode)
 
 <LoadDialog>:
     BoxLayout:
@@ -82,4 +117,4 @@
 
             Button:
                 text: 'Load'
-                on_release: root.func_load(filechooser.path, filechooser.selection, root.textinput_update)
+                on_release: root.func_load(filechooser.path, filechooser.selection, root.textinput_update, root.func_on_success)

@@ -1,5 +1,12 @@
 {
-	"keymap" :
+	"input_list" :
+	[
+		"P1.IsLeft",
+		"Gap.X",
+		"Gap.Y",
+		"P1.CanAction"
+	],
+	"output_list" :
 	[
 		[0, 0, 0],
 		[0, 1, 0],

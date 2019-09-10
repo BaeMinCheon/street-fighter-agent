@@ -12,7 +12,17 @@ class Manager:
         self.count_frame = 0
         self.preprocess_code = ''
         self.control_code = ''
-        self.keymap = []
+        self.agent_config = {}
+
+    def InitAgent(self):
+        self.agent = Agent.Agent(self.agent_config['input_list'], self.agent_config['output_list'])
+        self.agent.InitNetwork()
+
+    def LoadNetwork(self):
+        pass
+
+    def SaveNetwork(self):
+        pass
 
     def Run(self):
         self.count_frame = 0
@@ -26,11 +36,13 @@ class Manager:
                 if need_agent:
                     self.agent.Input(feature)
                     decision = self.agent.Output()
-                    action = self.PostProcess(decision)
-                    self.server.Send(action)
+                    self.server.Send(decision)
+
+                    self.widget.server.label_train_check.text = 'Agent Status : Train On'
                 else:
-                    action = self.PostProcess(control)
-                    self.server.Send(action)
+                    self.server.Send(control)
+
+                    self.widget.server.label_train_check.text = 'Agent Status : Train Off'
             else:
                 break
         self.server.Close()
@@ -41,7 +53,6 @@ class Manager:
         self.is_running = True
         self.server.InitSocket()
         self.server.Accept()
-        self.agent = Agent.Agent(4, len(self.keymap), 0.9)
         self.Run()
 
     def Stop(self):
@@ -63,9 +74,3 @@ class Manager:
         if len(locals['control']) == 3:
             need_agent = False
         return need_agent, locals['control']
-
-    def PostProcess(self, _output):
-        if type(_output) is list:
-            return _output
-        else:
-            return self.keymap[_output]

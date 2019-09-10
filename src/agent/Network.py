@@ -4,11 +4,10 @@ import tensorflow as tf
 
 class Network:
 
-    def __init__(self, _session, _inputSize, _outputSize, _discount, _netName):
+    def __init__(self, _session, _inputSize, _outputSize, _netName):
         self.session = _session
         self.size_input = _inputSize
         self.size_output = _outputSize
-        self.discount = _discount
         self.network_name = _netName
         self.InitNet(100, 0.01)
 
