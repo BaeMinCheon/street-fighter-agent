@@ -43,8 +43,8 @@ class RootWidget(BoxLayout):
         self.popup = Popup(title='File Open Dialog', content=content, size_hint=(0.9, 0.9))
         self.popup.open()
 
-    def ShowSaveDialog(self, _onSuccess = None):
-        content = SaveDialog(func_save=self.Save, func_cancel=self.DismissLoadDialog, func_on_success=_onSuccess)
+    def ShowSaveDialog(self, _textinput, _onSuccess = None):
+        content = SaveDialog(func_save=self.Save, func_cancel=self.DismissLoadDialog, textinput_save=_textinput, func_on_success=_onSuccess)
         self.popup = Popup(title='File Save Dialog', content=content, size_hint=(0.9, 0.9))
         self.popup.open()
 
@@ -61,9 +61,11 @@ class RootWidget(BoxLayout):
                 _onSuccess(path, text)
         self.DismissLoadDialog()
     
-    def Save(self, _path, _filename, _onSuccess):
+    def Save(self, _path, _filename, _textinput, _onSuccess):
         with open(os.path.join(_path, _filename), 'w') as stream:
             path = stream.name
+            if _textinput is not None:
+                stream.write(_textinput.text)
             if _onSuccess is not None:
                 _onSuccess(path)
         self.DismissLoadDialog()
@@ -175,7 +177,8 @@ class LoadDialog(FloatLayout):
 
 class SaveDialog(FloatLayout):
 
-    textinput_select = ObjectProperty(None)
+    textinput_save = ObjectProperty(None)
+    textinput_filename = ObjectProperty(None)
 
     func_save = ObjectProperty(None)
     func_cancel = ObjectProperty(None)

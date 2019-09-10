@@ -12,6 +12,7 @@ class Agent:
         self.output_list = _outputList
 
     def InitNetwork(self):
+        tf.reset_default_graph()
         self.session = tf.Session()
         self.network = Network.Network(self.session, len(self.input_list), len(self.output_list), 'main')
         self.session.run(tf.global_variables_initializer())

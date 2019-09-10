@@ -42,7 +42,7 @@
         Button:
             id: button_save_network
             text: 'Save Network'
-            on_release: root.root.ShowSaveDialog(root.OnSuccessSaveNetwork)
+            on_release: root.root.ShowSaveDialog(None, root.OnSuccessSaveNetwork)
             disabled: True
         Label:
             id: label_train_check
@@ -142,7 +142,7 @@
 
             Button:
                 text: 'Save'
-                on_release: root.func_save(filechooser.path, textinput_filename.text, root.func_on_success)
+                on_release: root.func_save(filechooser.path, textinput_filename.text, root.textinput_save, root.func_on_success)
             Button:
                 text: 'Cancel'
                 on_release: root.func_cancel()
