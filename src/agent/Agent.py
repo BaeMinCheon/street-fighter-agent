@@ -17,6 +17,14 @@ class Agent:
         self.session.run(tf.global_variables_initializer())
         self.state = [0] * len(self.input_list)
 
+    def LoadNetwork(self, _filepath):
+        saver = tf.train.Saver()
+        saver.restore(self.session, _filepath)
+
+    def SaveNetwork(self, _filepath):
+        saver = tf.train.Saver()
+        saver.save(self.session, _filepath)
+
     def Input(self, _data):
         self.state = [None] * len(self.input_list)
         for i in range(len(self.input_list)):

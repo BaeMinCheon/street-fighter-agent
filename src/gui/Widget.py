@@ -38,50 +38,35 @@ class RootWidget(BoxLayout):
         self.server = None
         self.config = None
 
-    def OnStart(self):
-        self.server.button_start_server.disabled = True
-        self.server.button_stop_server.disabled = False
-        self.server.button_init_agent.disabled = True
-        self.server.button_load_network.disabled = True
-        self.server.button_save_network.disabled = True
-        self.server.textinput_ip.disabled = True
-        self.manager.server.ip_server = self.server.textinput_ip.text
-        self.server.textinput_port.disabled = True
-        self.manager.server.port_server = int(self.server.textinput_port.text)
+    def ShowLoadDialog(self, _textinput, _onSuccess = None):
+        content = LoadDialog(func_load=self.Load, func_cancel=self.DismissLoadDialog, textinput_update=_textinput, func_on_success=_onSuccess)
+        self.popup = Popup(title='File Open Dialog', content=content, size_hint=(0.9, 0.9))
+        self.popup.open()
 
-        self.config.button_load_preprocess.disabled = True
-        self.config.textinput_preprocess.disabled = True
-        self.config.button_load_control.disabled = True
-        self.config.textinput_control.disabled = True
-        self.config.button_load_agent_config.disabled = True
-        self.config.textinput_agent_config.disabled = True
-        self.config.button_load_network.disabled = True
-        self.config.textinput_network.disabled = True
+    def ShowSaveDialog(self, _onSuccess = None):
+        content = SaveDialog(func_save=self.Save, func_cancel=self.DismissLoadDialog, func_on_success=_onSuccess)
+        self.popup = Popup(title='File Save Dialog', content=content, size_hint=(0.9, 0.9))
+        self.popup.open()
 
-        t = Thread(target=self.manager.Start)
-        t.daemon = True
-        t.start()
+    def DismissLoadDialog(self):
+        self.popup.dismiss()
 
-    def OnStop(self):
-        self.server.button_start_server.disabled = False
-        self.server.button_stop_server.disabled = True
-        self.server.button_init_agent.disabled = False
-        self.server.button_save_network.disabled = False
-        self.server.textinput_ip.disabled = False
-        self.server.textinput_port.disabled = False
-
-        self.config.button_load_preprocess.disabled = False
-        self.config.textinput_preprocess.disabled = False
-        self.config.button_load_control.disabled = False
-        self.config.textinput_control.disabled = False
-        self.config.button_load_agent_config.disabled = False
-        self.config.textinput_agent_config.disabled = False
-        self.config.button_load_network.disabled = False
-        self.config.textinput_network.disabled = False
-
-        t = Thread(target=self.manager.Stop)
-        t.daemon = True
-        t.start()
+    def Load(self, _path, _filename, _textinput, _onSuccess):
+        with open(os.path.join(_path, _filename[0])) as stream:
+            text = stream.read()
+            path = stream.name
+            if _textinput is not None:
+                _textinput.text = text
+            if _onSuccess is not None:
+                _onSuccess(path, text)
+        self.DismissLoadDialog()
+    
+    def Save(self, _path, _filename, _onSuccess):
+        with open(os.path.join(_path, _filename), 'w') as stream:
+            path = stream.name
+            if _onSuccess is not None:
+                _onSuccess(path)
+        self.DismissLoadDialog()
 
 class ServerWidget(BoxLayout):
 
@@ -96,8 +81,51 @@ class ServerWidget(BoxLayout):
     textinput_port = ObjectProperty(None)
     label_train_check = ObjectProperty(None)
 
-    func_start = ObjectProperty(None)
-    func_stop = ObjectProperty(None)
+    def OnClickStartServer(self):
+        self.button_start_server.disabled = True
+        self.button_stop_server.disabled = False
+        self.button_init_agent.disabled = True
+        self.button_load_network.disabled = True
+        self.button_save_network.disabled = True
+        self.textinput_ip.disabled = True
+        self.root.manager.server.ip_server = self.textinput_ip.text
+        self.textinput_port.disabled = True
+        self.root.manager.server.port_server = int(self.textinput_port.text)
+
+        self.root.config.button_load_preprocess.disabled = True
+        self.root.config.textinput_preprocess.disabled = True
+        self.root.config.button_load_control.disabled = True
+        self.root.config.textinput_control.disabled = True
+        self.root.config.button_load_agent_config.disabled = True
+        self.root.config.textinput_agent_config.disabled = True
+        self.root.config.button_load_network.disabled = True
+        self.root.config.textinput_network.disabled = True
+
+        t = Thread(target=self.root.manager.Start)
+        t.daemon = True
+        t.start()
+
+    def OnClickStopServer(self):
+        self.button_start_server.disabled = False
+        self.button_stop_server.disabled = True
+        self.button_init_agent.disabled = False
+        self.button_load_network.disabled = False
+        self.button_save_network.disabled = False
+        self.textinput_ip.disabled = False
+        self.textinput_port.disabled = False
+
+        self.root.config.button_load_preprocess.disabled = False
+        self.root.config.textinput_preprocess.disabled = False
+        self.root.config.button_load_control.disabled = False
+        self.root.config.textinput_control.disabled = False
+        self.root.config.button_load_agent_config.disabled = False
+        self.root.config.textinput_agent_config.disabled = False
+        self.root.config.button_load_network.disabled = False
+        self.root.config.textinput_network.disabled = False
+
+        t = Thread(target=self.root.manager.Stop)
+        t.daemon = True
+        t.start()
 
     def OnClickInitializeAgent(self):
         self.root.manager.InitAgent()
@@ -105,11 +133,11 @@ class ServerWidget(BoxLayout):
         self.button_load_network.disabled = False
         self.button_save_network.disabled = False
 
-    def OnClickLoadNetwork(self):
-        self.root.manager.LoadNetwork()
+    def OnSuccessLoadNetwork(self, _path, _text):
+        self.root.manager.LoadNetwork(_path)
 
-    def OnClickSaveNetwork(self):
-        self.root.manager.SaveNetwork()
+    def OnSuccessSaveNetwork(self, _path):
+        self.root.manager.SaveNetwork(_path)
 
 class ConfigWidget(GridLayout):
 
@@ -124,32 +152,17 @@ class ConfigWidget(GridLayout):
     textinput_agent_config = ObjectProperty(None)
     textinput_network = ObjectProperty(None)
 
-    def ShowLoadDialog(self, _textinput, _onSuccess = None):
-        content = LoadDialog(func_load=self.Load, func_cancel=self.DismissLoadDialog, textinput_update=_textinput, func_on_success=_onSuccess)
-        self.popup = Popup(title='File Open Dialog', content=content, size_hint=(0.8, 0.8))
-        self.popup.open()
+    def OnSuccessLoadPreprocessCode(self, _path, _text):
+        self.root.manager.preprocess_code = _text
 
-    def DismissLoadDialog(self):
-        self.popup.dismiss()
+    def OnSuccessLoadControlCode(self, _path, _text):
+        self.root.manager.control_code = _text
 
-    def Load(self, _path, _filename, _textinput, _onSuccess):
-        with open(os.path.join(_path, _filename[0])) as stream:
-            _textinput.text = stream.read()
-            if _onSuccess is not None:
-                _onSuccess()
-        self.DismissLoadDialog()
-    
-    def OnSuccessLoadPreprocessCode(self):
-        self.root.manager.preprocess_code = self.root.config.textinput_preprocess.text
-
-    def OnSuccessLoadControlCode(self):
-        self.root.manager.control_code = self.root.config.textinput_control.text
-
-    def OnSuccessLoadAgentConfig(self):
-        self.root.manager.agent_config = json.loads(self.root.config.textinput_agent_config.text)
+    def OnSuccessLoadAgentConfig(self, _path, _text):
+        self.root.manager.agent_config = json.loads(_text)
         self.root.server.button_init_agent.disabled = False
 
-    def OnSuccessLoadNetworkCode(self):
+    def OnSuccessLoadNetworkCode(self, _path, _text):
         pass
 
 class LoadDialog(FloatLayout):
@@ -157,6 +170,14 @@ class LoadDialog(FloatLayout):
     textinput_update = ObjectProperty(None)
     
     func_load = ObjectProperty(None)
+    func_cancel = ObjectProperty(None)
+    func_on_success = ObjectProperty(None)
+
+class SaveDialog(FloatLayout):
+
+    textinput_select = ObjectProperty(None)
+
+    func_save = ObjectProperty(None)
     func_cancel = ObjectProperty(None)
     func_on_success = ObjectProperty(None)
 
@@ -168,7 +189,7 @@ class Widget(App):
 
     def build(self):
         root = RootWidget(self.manager)
-        server = ServerWidget(func_start=root.OnStart, func_stop=root.OnStop)
+        server = ServerWidget()
         config = ConfigWidget()
 
         root.add_widget(server)

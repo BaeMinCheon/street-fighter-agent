@@ -18,11 +18,11 @@ class Manager:
         self.agent = Agent.Agent(self.agent_config['input_list'], self.agent_config['output_list'])
         self.agent.InitNetwork()
 
-    def LoadNetwork(self):
-        pass
+    def LoadNetwork(self, _filepath):
+        self.agent.LoadNetwork(_filepath)
 
-    def SaveNetwork(self):
-        pass
+    def SaveNetwork(self, _filepath):
+        self.agent.SaveNetwork(_filepath)
 
     def Run(self):
         self.count_frame = 0
@@ -45,7 +45,6 @@ class Manager:
                     self.widget.server.label_train_check.text = 'Agent Status : Train Off'
             else:
                 break
-        self.server.Close()
 
     def Start(self):
         print()
@@ -59,6 +58,7 @@ class Manager:
         print()
         print('Manager.Stop()')
         self.is_running = False
+        self.server.Close()
 
     def PreProcess(self, _input):
         feature = {}
