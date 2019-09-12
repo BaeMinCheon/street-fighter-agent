@@ -2,17 +2,17 @@
 import numpy as np
 import tensorflow as tf
 
-class Network:
+class Model:
 
     def __init__(self, _session, _inputSize, _outputSize, _netName):
         self.session = _session
         self.size_input = _inputSize
         self.size_output = _outputSize
-        self.network_name = _netName
+        self.model_name = _netName
         self.InitNet(100, 0.01)
 
     def InitNet(self, _hiddenSize, _learnRate):
-        with tf.variable_scope(self.network_name):
+        with tf.variable_scope(self.model_name):
             self.input = tf.placeholder(tf.float32, shape=[None, self.size_input], name='input')
 
             weight01 = tf.get_variable(name='weight_01', shape=[self.size_input, _hiddenSize], initializer=tf.contrib.layers.xavier_initializer())

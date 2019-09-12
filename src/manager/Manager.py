@@ -16,13 +16,13 @@ class Manager:
 
     def InitAgent(self):
         self.agent = Agent.Agent(self.agent_config['input_list'], self.agent_config['output_list'])
-        self.agent.InitNetwork()
+        self.agent.InitModel()
 
-    def LoadNetwork(self, _filepath):
-        self.agent.LoadNetwork(_filepath)
+    def LoadModel(self, _filepath):
+        self.agent.LoadModel(_filepath)
 
-    def SaveNetwork(self, _filepath):
-        self.agent.SaveNetwork(_filepath)
+    def SaveModel(self, _filepath):
+        self.agent.SaveModel(_filepath)
 
     def Run(self):
         self.count_frame = 0

@@ -77,8 +77,8 @@ class ServerWidget(BoxLayout):
     button_start_server = ObjectProperty(None)
     button_stop_server = ObjectProperty(None)
     button_init_agent = ObjectProperty(None)
-    button_load_network = ObjectProperty(None)
-    button_save_network = ObjectProperty(None)
+    button_load_model = ObjectProperty(None)
+    button_save_model = ObjectProperty(None)
     textinput_ip = ObjectProperty(None)
     textinput_port = ObjectProperty(None)
     label_train_check = ObjectProperty(None)
@@ -87,8 +87,8 @@ class ServerWidget(BoxLayout):
         self.button_start_server.disabled = True
         self.button_stop_server.disabled = False
         self.button_init_agent.disabled = True
-        self.button_load_network.disabled = True
-        self.button_save_network.disabled = True
+        self.button_load_model.disabled = True
+        self.button_save_model.disabled = True
         self.textinput_ip.disabled = True
         self.root.manager.server.ip_server = self.textinput_ip.text
         self.textinput_port.disabled = True
@@ -100,8 +100,8 @@ class ServerWidget(BoxLayout):
         self.root.config.textinput_control.disabled = True
         self.root.config.button_load_agent_config.disabled = True
         self.root.config.textinput_agent_config.disabled = True
-        self.root.config.button_load_network.disabled = True
-        self.root.config.textinput_network.disabled = True
+        self.root.config.button_load_model.disabled = True
+        self.root.config.textinput_model.disabled = True
 
         t = Thread(target=self.root.manager.Start)
         t.daemon = True
@@ -111,8 +111,8 @@ class ServerWidget(BoxLayout):
         self.button_start_server.disabled = False
         self.button_stop_server.disabled = True
         self.button_init_agent.disabled = False
-        self.button_load_network.disabled = False
-        self.button_save_network.disabled = False
+        self.button_load_model.disabled = False
+        self.button_save_model.disabled = False
         self.textinput_ip.disabled = False
         self.textinput_port.disabled = False
 
@@ -122,8 +122,8 @@ class ServerWidget(BoxLayout):
         self.root.config.textinput_control.disabled = False
         self.root.config.button_load_agent_config.disabled = False
         self.root.config.textinput_agent_config.disabled = False
-        self.root.config.button_load_network.disabled = False
-        self.root.config.textinput_network.disabled = False
+        self.root.config.button_load_model.disabled = False
+        self.root.config.textinput_model.disabled = False
 
         t = Thread(target=self.root.manager.Stop)
         t.daemon = True
@@ -132,14 +132,14 @@ class ServerWidget(BoxLayout):
     def OnClickInitializeAgent(self):
         self.root.manager.InitAgent()
         self.button_start_server.disabled = False
-        self.button_load_network.disabled = False
-        self.button_save_network.disabled = False
+        self.button_load_model.disabled = False
+        self.button_save_model.disabled = False
 
-    def OnSuccessLoadNetwork(self, _path, _text):
-        self.root.manager.LoadNetwork(_path)
+    def OnSuccessLoadModel(self, _path, _text):
+        self.root.manager.LoadModel(_path)
 
-    def OnSuccessSaveNetwork(self, _path):
-        self.root.manager.SaveNetwork(_path)
+    def OnSuccessSaveModel(self, _path):
+        self.root.manager.SaveModel(_path)
 
 class ConfigWidget(GridLayout):
 
@@ -148,11 +148,11 @@ class ConfigWidget(GridLayout):
     button_load_preprocess = ObjectProperty(None)
     button_load_control = ObjectProperty(None)
     button_load_agent_config = ObjectProperty(None)
-    button_load_network = ObjectProperty(None)
+    button_load_model = ObjectProperty(None)
     textinput_preprocess = ObjectProperty(None)
     textinput_control = ObjectProperty(None)
     textinput_agent_config = ObjectProperty(None)
-    textinput_network = ObjectProperty(None)
+    textinput_model = ObjectProperty(None)
 
     def OnSuccessLoadPreprocessCode(self, _path, _text):
         self.root.manager.preprocess_code = _text
@@ -164,7 +164,7 @@ class ConfigWidget(GridLayout):
         self.root.manager.agent_config = json.loads(_text)
         self.root.server.button_init_agent.disabled = False
 
-    def OnSuccessLoadNetworkCode(self, _path, _text):
+    def OnSuccessLoadModelCode(self, _path, _text):
         pass
 
 class LoadDialog(FloatLayout):

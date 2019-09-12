@@ -7,8 +7,8 @@
     button_start_server: button_start_server
     button_stop_server: button_stop_server
     button_init_agent: button_init_agent
-    button_load_network: button_load_network
-    button_save_network: button_save_network
+    button_load_model: button_load_model
+    button_save_model: button_save_model
     textinput_ip: textinput_ip
     textinput_port: textinput_port
     label_train_check: label_train_check
@@ -35,14 +35,14 @@
             on_release: root.OnClickInitializeAgent()
             disabled: True
         Button:
-            id: button_load_network
-            text: 'Load Network'
-            on_release: root.root.ShowLoadDialog(None, root.OnSuccessLoadNetwork)
+            id: button_load_model
+            text: 'Load Model'
+            on_release: root.root.ShowLoadDialog(None, root.OnSuccessLoadModel)
             disabled: True
         Button:
-            id: button_save_network
-            text: 'Save Network'
-            on_release: root.root.ShowSaveDialog(None, root.OnSuccessSaveNetwork)
+            id: button_save_model
+            text: 'Save Model'
+            on_release: root.root.ShowSaveDialog(None, root.OnSuccessSaveModel)
             disabled: True
         Label:
             id: label_train_check
@@ -66,11 +66,11 @@
     button_load_preprocess: button_load_preprocess
     button_load_control: button_load_control
     button_load_agent_config: button_load_agent_config
-    button_load_network: button_load_network
+    button_load_model: button_load_model
     textinput_preprocess: textinput_preprocess
     textinput_control: textinput_control
     textinput_agent_config: textinput_agent_config
-    textinput_network: textinput_network
+    textinput_model: textinput_model
 
     cols: 2
 
@@ -93,11 +93,11 @@
         text: 'Load Agent Config'
         on_release: root.root.ShowLoadDialog(textinput_agent_config, root.OnSuccessLoadAgentConfig)
     TextInput:
-        id: textinput_network
+        id: textinput_model
     Button:
-        id: button_load_network
-        text: 'Load Network Code'
-        on_release: root.root.ShowLoadDialog(textinput_network, root.OnSuccessLoadNetworkCode)
+        id: button_load_model
+        text: 'Load Model Code'
+        on_release: root.root.ShowLoadDialog(textinput_model, root.OnSuccessLoadModelCode)
 
 <LoadDialog>:
     BoxLayout:
