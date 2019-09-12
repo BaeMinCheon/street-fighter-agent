@@ -2,13 +2,22 @@
 import numpy as np
 import tensorflow as tf
 
+def GetSyncOps(_srcName, _dstName):
+    src_var_list = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope=_srcName)
+    dst_var_list = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope=_dstName)
+    op_list = []
+    for src_var, dst_var in zip(src_var_list, dst_var_list):
+        op_list.append(dst_var.assign(src_var.value()))
+    return op_list
+
 class Model:
 
-    def __init__(self, _session, _inputSize, _outputSize, _netName):
+    def __init__(self, _session, _netName, _inputSize, _outputSize, _discount):
         self.session = _session
+        self.model_name = _netName
         self.size_input = _inputSize
         self.size_output = _outputSize
-        self.model_name = _netName
+        self.discount = _discount
         self.InitNet(100, 0.01)
 
     def InitNet(self, _hiddenSize, _learnRate):

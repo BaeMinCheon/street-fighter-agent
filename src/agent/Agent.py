@@ -5,18 +5,39 @@ import tensorflow as tf
 import random
 import collections
 
+def GetStacks(_main, _target, _batch):
+    stack_x = np.empty(0).reshape(0, _main.size_input)
+    stack_y = np.empty(0).reshape(0, _main.size_output)
+    for curr_state, decision, reward, next_state in _batch:
+        curr_main_Q = _main.Decide(curr_state)
+        next_main_Q = _main.Decide(next_state)
+        next_target_Q = _target.Decide(next_state)
+        curr_main_Q[0][decision] = float(reward) + _main.discount * next_target_Q[0][np.argmax(next_main_Q)]
+    stack_x = np.vstack([stack_x, curr_state])
+    stack_y = np.vstack([stack_y, curr_main_Q])
+    return stack_x, stack_y
+
 class Agent:
 
-    def __init__(self, _inputList, _outputList):
+    def __init__(self, _inputList, _outputList, _maxReplayNumber):
         self.input_list = _inputList
         self.output_list = _outputList
+        self.max_replay_number = _maxReplayNumber
 
     def InitModel(self):
         tf.reset_default_graph()
         self.session = tf.Session()
-        self.mdoel = Model.Model(self.session, len(self.input_list), len(self.output_list), 'main')
+        self.model_main = Model.Model(self.session, 'main', len(self.input_list), len(self.output_list), 0.9)
+        self.model_target = Model.Model(self.session, 'target', len(self.input_list), len(self.output_list), 0.9)
         self.session.run(tf.global_variables_initializer())
+        self.sync_op = Model.GetSyncOps('main', 'target')
+        self.session.run(self.sync_op)
+
         self.state = [0] * len(self.input_list)
+        self.decision = 0
+        self.reward = 0
+        self.number_decide = 0
+        self.replay_queue = collections.deque()
 
     def LoadModel(self, _filepath):
         saver = tf.train.Saver()
@@ -26,13 +47,28 @@ class Agent:
         saver = tf.train.Saver()
         saver.save(self.session, _filepath)
 
-    def Input(self, _data):
-        self.state = [None] * len(self.input_list)
+    def Input(self, _feature):
+        self.reward = _feature['Reward']
+        next_state = [None] * len(self.input_list)
         for i in range(len(self.input_list)):
-            self.state[i] = _data[self.input_list[i]]
-        label = self.Model.Decide(self.state)
-        self.Model.Train([self.state], label)
+            self.state[i] = _feature[self.input_list[i]]
+        self.replay_queue.append((self.state, self.decision, self.reward, next_state))
+        if len(self.replay_queue) > self.max_replay_number:
+            self.replay_queue.popleft()
+        self.state = next_state
+
+        if self.number_decide % 1000 == 999:
+            for i in range(50):
+                batch = random.sample(self.replay_queue, 10)
+                stack_x, stack_y = GetStacks(self.model_main, self.model_target, batch)
+                self.model_main.Train(stack_x, stack_y)
+            self.session.run(self.sync_op)
 
     def Output(self):
-        decision = self.Model.Decide(self.state)
-        return self.output_list[np.argmax(decision)]
+        self.number_decide += 1
+        random_boundary = 1.0 / float(1 + self.number_decide / 10000)
+        if np.random.rand(1) < random_boundary:
+            self.decision = random.randrange(0, len(self.output_list))
+        else:
+            self.decision = np.argmax(self.model_main.Decide(self.state))
+        return self.output_list[self.decision]

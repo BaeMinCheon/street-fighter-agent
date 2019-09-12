@@ -37,3 +37,4 @@ if data['Winner.Player.Raw'] > 0:
     feature['Winner.Player'] = 1
 else:
     feature['Winner.Player'] = 0
+feature['Reward'] = feature['Gap.HP.P1']

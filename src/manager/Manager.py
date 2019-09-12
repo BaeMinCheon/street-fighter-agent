@@ -15,7 +15,7 @@ class Manager:
         self.agent_config = {}
 
     def InitAgent(self):
-        self.agent = Agent.Agent(self.agent_config['input_list'], self.agent_config['output_list'])
+        self.agent = Agent.Agent(self.agent_config['input_list'], self.agent_config['output_list'], int(self.agent_config['max_replay_number']))
         self.agent.InitModel()
 
     def LoadModel(self, _filepath):
