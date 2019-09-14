@@ -1,6 +1,6 @@
 if feature['Winner.Player'] == 0:
-	if feature['P1.CanAction'] == 1:
-		pass
+	if feature['P1.CanControl'] == 1:
+		control = []
 	else:
 		control = [0, 0, 0]
 else:

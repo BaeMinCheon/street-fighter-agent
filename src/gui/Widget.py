@@ -100,8 +100,6 @@ class ServerWidget(BoxLayout):
         self.root.config.textinput_control.disabled = True
         self.root.config.button_load_agent_config.disabled = True
         self.root.config.textinput_agent_config.disabled = True
-        self.root.config.button_load_model.disabled = True
-        self.root.config.textinput_model.disabled = True
 
         t = Thread(target=self.root.manager.Start)
         t.daemon = True
@@ -122,8 +120,6 @@ class ServerWidget(BoxLayout):
         self.root.config.textinput_control.disabled = False
         self.root.config.button_load_agent_config.disabled = False
         self.root.config.textinput_agent_config.disabled = False
-        self.root.config.button_load_model.disabled = False
-        self.root.config.textinput_model.disabled = False
 
         self.label_train_check.text = 'Agent Status : NaN'
 
@@ -150,11 +146,9 @@ class ConfigWidget(GridLayout):
     button_load_preprocess = ObjectProperty(None)
     button_load_control = ObjectProperty(None)
     button_load_agent_config = ObjectProperty(None)
-    button_load_model = ObjectProperty(None)
     textinput_preprocess = ObjectProperty(None)
     textinput_control = ObjectProperty(None)
     textinput_agent_config = ObjectProperty(None)
-    textinput_model = ObjectProperty(None)
 
     def OnSuccessLoadPreprocessCode(self, _path, _text):
         self.root.manager.preprocess_code = _text
@@ -165,9 +159,6 @@ class ConfigWidget(GridLayout):
     def OnSuccessLoadAgentConfig(self, _path, _text):
         self.root.manager.agent_config = json.loads(_text)
         self.root.server.button_init_agent.disabled = False
-
-    def OnSuccessLoadModelCode(self, _path, _text):
-        pass
 
 class LoadDialog(FloatLayout):
 

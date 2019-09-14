@@ -66,11 +66,9 @@
     button_load_preprocess: button_load_preprocess
     button_load_control: button_load_control
     button_load_agent_config: button_load_agent_config
-    button_load_model: button_load_model
     textinput_preprocess: textinput_preprocess
     textinput_control: textinput_control
     textinput_agent_config: textinput_agent_config
-    textinput_model: textinput_model
 
     cols: 2
 
@@ -92,12 +90,6 @@
         id: button_load_agent_config
         text: 'Load Agent Config'
         on_release: root.root.ShowLoadDialog(textinput_agent_config, root.OnSuccessLoadAgentConfig)
-    TextInput:
-        id: textinput_model
-    Button:
-        id: button_load_model
-        text: 'Load Model Code'
-        on_release: root.root.ShowLoadDialog(textinput_model, root.OnSuccessLoadModelCode)
 
 <LoadDialog>:
     BoxLayout:
