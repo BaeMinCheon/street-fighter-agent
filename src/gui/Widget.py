@@ -125,6 +125,8 @@ class ServerWidget(BoxLayout):
         self.root.config.button_load_model.disabled = False
         self.root.config.textinput_model.disabled = False
 
+        self.label_train_check.text = 'Agent Status : NaN'
+
         t = Thread(target=self.root.manager.Stop)
         t.daemon = True
         t.start()

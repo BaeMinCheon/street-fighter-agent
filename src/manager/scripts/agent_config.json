@@ -34,5 +34,11 @@
 		[4, 3, 0],
 		[4, 4, 0]
 	],
+	"prev_list" :
+	[
+		"Gap.HP.P1",
+		"Gap.X",
+		"RoundTimer"
+	],
 	"max_replay_number" : "50000"
 }

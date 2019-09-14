@@ -13,10 +13,13 @@ class Manager:
         self.preprocess_code = ''
         self.control_code = ''
         self.agent_config = {}
+        self.prev_feature = {}
 
     def InitAgent(self):
         self.agent = Agent.Agent(self.agent_config['input_list'], self.agent_config['output_list'], int(self.agent_config['max_replay_number']))
         self.agent.InitModel()
+        for key in self.agent_config['prev_list']:
+            self.prev_feature[key] = 0
 
     def LoadModel(self, _filepath):
         self.agent.LoadModel(_filepath)
@@ -37,11 +40,9 @@ class Manager:
                     self.agent.Input(feature)
                     decision = self.agent.Output()
                     self.server.Send(decision)
-
                     self.widget.server.label_train_check.text = 'Agent Status : Train On'
                 else:
                     self.server.Send(control)
-
                     self.widget.server.label_train_check.text = 'Agent Status : Train Off'
             else:
                 break
@@ -62,8 +63,12 @@ class Manager:
 
     def PreProcess(self, _input):
         feature = {}
-        locals = {'self': self, 'data': _input, 'feature': feature}
-        exec(self.preprocess_code, {}, locals)
+        if len(_input) > 0:
+            locals = {'prev': self.prev_feature, 'data': _input, 'feature': feature}
+            exec(self.preprocess_code, {}, locals)
+            for key in self.prev_feature:
+                feature[key + '.Diff'] = feature[key] - self.prev_feature[key]
+                self.prev_feature[key] = feature[key]
         return feature
 
     def NeedAgent(self, _feature):
