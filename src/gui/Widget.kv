@@ -4,21 +4,49 @@
     spacing: 10
 
 <ServerWidget>:
-    button_start: button_start
-    button_stop: button_stop
+    button_start_server: button_start_server
+    button_stop_server: button_stop_server
+    button_init_agent: button_init_agent
+    button_load_model: button_load_model
+    button_save_model: button_save_model
     textinput_ip: textinput_ip
     textinput_port: textinput_port
+    label_train_check: label_train_check
 
+    size_hint_y: 0.2
     orientation: 'horizontal'
 
-    Button:
-        id: button_start
-        text: 'Start Server'
-        on_release: root.func_start()
-    Button:
-        id: button_stop
-        text: 'Stop Server'
-        on_release: root.func_stop()
+    GridLayout:
+        cols: 2
+
+        Button:
+            id: button_start_server
+            text: 'Start Server'
+            on_release: root.OnClickStartServer()
+            disabled: True
+        Button:
+            id: button_stop_server
+            text: 'Stop Server'
+            on_release: root.OnClickStopServer()
+            disabled: True
+        Button:
+            id: button_init_agent
+            text: 'Initialize Agent'
+            on_release: root.OnClickInitializeAgent()
+            disabled: True
+        Button:
+            id: button_load_model
+            text: 'Load Model'
+            on_release: root.root.ShowLoadDialog(None, root.OnSuccessLoadModel)
+            disabled: True
+        Button:
+            id: button_save_model
+            text: 'Save Model'
+            on_release: root.root.ShowSaveDialog(None, root.OnSuccessSaveModel)
+            disabled: True
+        Label:
+            id: label_train_check
+            text: 'Agent Status : NaN'
 
     GridLayout:
         cols: 2
@@ -37,10 +65,10 @@
 <ConfigWidget>:
     button_load_preprocess: button_load_preprocess
     button_load_control: button_load_control
-    button_load_keymap: button_load_keymap
+    button_load_agent_config: button_load_agent_config
     textinput_preprocess: textinput_preprocess
     textinput_control: textinput_control
-    textinput_keymap: textinput_keymap
+    textinput_agent_config: textinput_agent_config
 
     cols: 2
 
@@ -48,20 +76,20 @@
         id: textinput_preprocess
     Button:
         id: button_load_preprocess
-        text: 'Load Preprocess'
-        on_release: root.ShowLoadDialog(textinput_preprocess)
+        text: 'Load Preprocess Code'
+        on_release: root.root.ShowLoadDialog(textinput_preprocess, root.OnSuccessLoadPreprocessCode)
     TextInput:
         id: textinput_control
     Button:
         id: button_load_control
-        text: 'Load Control'
-        on_release: root.ShowLoadDialog(textinput_control)
+        text: 'Load Control Code'
+        on_release: root.root.ShowLoadDialog(textinput_control, root.OnSuccessLoadControlCode)
     TextInput:
-        id: textinput_keymap
+        id: textinput_agent_config
     Button:
-        id: button_load_keymap
-        text: 'Load Keymap'
-        on_release: root.ShowLoadDialog(textinput_keymap)
+        id: button_load_agent_config
+        text: 'Load Agent Config'
+        on_release: root.root.ShowLoadDialog(textinput_agent_config, root.OnSuccessLoadAgentConfig)
 
 <LoadDialog>:
     BoxLayout:
@@ -75,10 +103,38 @@
         BoxLayout:
             size_hint_y: None
             height: 30
+            
+            Button:
+                text: 'Load'
+                on_release: root.func_load(filechooser.path, filechooser.selection, root.textinput_update, root.func_on_success)
             Button:
                 text: 'Cancel'
                 on_release: root.func_cancel()
 
+<SaveDialog>:
+    textinput_filename: textinput_filename
+
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: 'vertical'
+
+        FileChooserListView:
+            id: filechooser
+            on_selection: textinput_filename.text = self.selection and self.selection[0] or ''
+        TextInput:
+            id: textinput_filename
+            size_hint_y: None
+            height: 30
+            multiline: False
+
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+
             Button:
-                text: 'Load'
-                on_release: root.func_load(filechooser.path, filechooser.selection, root.textinput_update)
+                text: 'Save'
+                on_release: root.func_save(filechooser.path, textinput_filename.text, root.textinput_save, root.func_on_success)
+            Button:
+                text: 'Cancel'
+                on_release: root.func_cancel()

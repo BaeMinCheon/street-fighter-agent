@@ -1,19 +1,30 @@
 
 import manager.Server as Server
 import agent.Agent as Agent
-import os
-import json
 
 class Manager:
 
     def __init__(self):
-        self.LoadConfig()
         self.server = Server.Server('127.0.0.1', 7000)
-        self.agent = Agent.Agent(4, len(self.keymap), 0.9)
+        self.agent = None
         self.widget = None
         self.is_running = False
         self.count_frame = 0
+        self.preprocess_code = ''
         self.control_code = ''
+        self.agent_config = {}
+        self.prev_feature = {}
+
+    def InitAgent(self):
+        self.agent = Agent.Agent(self.agent_config)
+        for key in self.agent_config['prev_list']:
+            self.prev_feature[key] = 0
+
+    def LoadModel(self, _filepath):
+        self.agent.LoadModel(_filepath)
+
+    def SaveModel(self, _filepath):
+        self.agent.SaveModel(_filepath)
 
     def Run(self):
         self.count_frame = 0
@@ -27,11 +38,11 @@ class Manager:
                 if need_agent:
                     self.agent.Input(feature)
                     decision = self.agent.Output()
-                    action = self.PostProcess(decision)
-                    self.server.Send(action)
+                    self.server.Send(decision)
+                    self.widget.server.label_train_check.text = 'Agent Status : Train On'
                 else:
-                    action = self.PostProcess(control)
-                    self.server.Send(action)
+                    self.server.Send(control)
+                    self.widget.server.label_train_check.text = 'Agent Status : Train Off'
             else:
                 break
 
@@ -39,6 +50,7 @@ class Manager:
         print()
         print('Manager.Start()')
         self.is_running = True
+        self.server.InitSocket()
         self.server.Accept()
         self.Run()
 
@@ -50,8 +62,12 @@ class Manager:
 
     def PreProcess(self, _input):
         feature = {}
-        locals = {'self': self, 'data': _input, 'feature': feature}
-        exec(self.preprocess_code, {}, locals)
+        if len(_input) > 0:
+            locals = {'prev': self.prev_feature, 'data': _input, 'feature': feature}
+            exec(self.preprocess_code, {}, locals)
+            for key in self.prev_feature:
+                feature[key + '.Diff'] = feature[key] - self.prev_feature[key]
+                self.prev_feature[key] = feature[key]
         return feature
 
     def NeedAgent(self, _feature):
@@ -62,18 +78,3 @@ class Manager:
         if len(locals['control']) == 3:
             need_agent = False
         return need_agent, locals['control']
-
-    def PostProcess(self, _output):
-        if type(_output) is list:
-            return _output
-        else:
-            return self.keymap[_output]
-
-    def LoadConfig(self):
-        manager_directory = os.path.dirname(os.path.realpath(__file__))
-        script_directory = os.path.join(manager_directory, 'scripts')
-        preprocess_path = os.path.join(script_directory, 'preprocess.code')
-        keymap_path = os.path.join(script_directory, 'keymap.json')
-        self.preprocess_code = open(preprocess_path, 'r').read()
-        keymap_string = open(keymap_path, 'r').read()
-        self.keymap = json.loads(keymap_string)['keymap']
