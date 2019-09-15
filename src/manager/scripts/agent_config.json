@@ -40,5 +40,17 @@
 		"Gap.X",
 		"RoundTimer"
 	],
-	"max_replay_number" : "50000"
+	"dqn" :
+	{
+		"max_replay_number" : 50000,
+		"train_period" : 1000,
+		"train_number" : 50,
+		"batch_size" : 10
+	},
+	"model" :
+	{
+		"hidden_layer_size" : 256,
+		"learning_rate" : 0.01,
+		"discount_rate" : 0.9
+	}
 }

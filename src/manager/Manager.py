@@ -16,8 +16,7 @@ class Manager:
         self.prev_feature = {}
 
     def InitAgent(self):
-        self.agent = Agent.Agent(self.agent_config['input_list'], self.agent_config['output_list'], int(self.agent_config['max_replay_number']))
-        self.agent.InitModel()
+        self.agent = Agent.Agent(self.agent_config)
         for key in self.agent_config['prev_list']:
             self.prev_feature[key] = 0
 

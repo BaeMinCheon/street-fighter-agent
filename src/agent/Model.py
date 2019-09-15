@@ -12,13 +12,14 @@ def GetSyncOps(_srcName, _dstName):
 
 class Model:
 
-    def __init__(self, _session, _netName, _inputSize, _outputSize, _discount):
-        self.session = _session
+    def __init__(self, _netName, _agent):
         self.model_name = _netName
-        self.size_input = _inputSize
-        self.size_output = _outputSize
-        self.discount = _discount
-        self.InitNet(100, 0.01)
+        self.session = _agent.session
+        self.size_input = len(_agent.input_list)
+        self.size_output = len(_agent.output_list)
+        self.discount = _agent.discount_rate
+        
+        self.InitNet(_agent.hidden_layer_size, _agent.learning_rate)
 
     def InitNet(self, _hiddenSize, _learnRate):
         with tf.variable_scope(self.model_name):

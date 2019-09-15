@@ -19,16 +19,26 @@ def GetStacks(_main, _target, _batch):
 
 class Agent:
 
-    def __init__(self, _inputList, _outputList, _maxReplayNumber):
-        self.input_list = _inputList
-        self.output_list = _outputList
-        self.max_replay_number = _maxReplayNumber
+    def __init__(self, _agentConfig):
+        self.input_list = _agentConfig['input_list']
+        self.output_list = _agentConfig['output_list']
+        
+        self.max_replay_number = _agentConfig['dqn']['max_replay_number']
+        self.train_period = _agentConfig['dqn']['train_period']
+        self.train_number = _agentConfig['dqn']['train_number']
+        self.batch_size = _agentConfig['dqn']['batch_size']
+
+        self.hidden_layer_size = _agentConfig['model']['hidden_layer_size']
+        self.learning_rate = _agentConfig['model']['learning_rate']
+        self.discount_rate = _agentConfig['model']['discount_rate']
+        
+        self.InitModel()
 
     def InitModel(self):
         tf.reset_default_graph()
         self.session = tf.Session()
-        self.model_main = Model.Model(self.session, 'main', len(self.input_list), len(self.output_list), 0.9)
-        self.model_target = Model.Model(self.session, 'target', len(self.input_list), len(self.output_list), 0.9)
+        self.model_main = Model.Model('main', self)
+        self.model_target = Model.Model('target', self)
         self.session.run(tf.global_variables_initializer())
         self.sync_op = Model.GetSyncOps('main', 'target')
         self.session.run(self.sync_op)
@@ -57,16 +67,16 @@ class Agent:
             self.replay_queue.popleft()
         self.state = next_state
 
-        if self.number_decide % 1000 == 999:
-            for i in range(50):
-                batch = random.sample(self.replay_queue, 10)
+        if self.number_decide % self.train_period == (self.train_period - 1):
+            for i in range(self.train_number):
+                batch = random.sample(self.replay_queue, self.batch_size)
                 stack_x, stack_y = GetStacks(self.model_main, self.model_target, batch)
                 self.model_main.Train(stack_x, stack_y)
             self.session.run(self.sync_op)
 
     def Output(self):
         self.number_decide += 1
-        random_boundary = 1.0 / float(1 + self.number_decide / 10000)
+        random_boundary = 1.0 / float(1 + self.number_decide / self.train_period)
         if np.random.rand(1) < random_boundary:
             self.decision = random.randrange(0, len(self.output_list))
         else:
