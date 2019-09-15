@@ -54,12 +54,3 @@ elif data['Winner.Player.Raw'] >= 256:
     feature['Winner.Player'] = 1
 else:
 	feature['Winner.Player'] = 0
-
-if data['IsPlayingRound.Raw'] == 0:
-	feature['IsPlayingRound'] = 0
-	feature['Winner.Player'] = 1
-elif data['IsPlayingRound.Raw'] == 3584:
-	feature['IsPlayingRound'] = 1
-	feature['Winner.Player'] = 0
-else:
-	feature['IsPlayingRound'] = 0
