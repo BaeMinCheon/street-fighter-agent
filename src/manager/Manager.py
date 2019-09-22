@@ -49,10 +49,15 @@ class Manager:
     def Start(self):
         print()
         print('Manager.Start()')
-        self.is_running = True
-        self.server.InitSocket()
-        self.server.Accept()
-        self.Run()
+        try:
+            self.is_running = True
+            self.server.InitSocket()
+            self.server.Accept()
+            self.Run()
+        except:
+            pass
+        finally:
+            self.widget.server.OnClickStopServer()
 
     def Stop(self):
         print()
