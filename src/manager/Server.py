@@ -51,7 +51,6 @@ class Server:
             self.socket_client.close()
             self.socket_client = None
             print('> server lost client : {}'.format(self.ip_client))
-        except AttributeError as error:
-            print('> server failed to close socket, error:' + str(error))
+        except:
             if self.socket_server is not None:
                 self.socket_server.close()
