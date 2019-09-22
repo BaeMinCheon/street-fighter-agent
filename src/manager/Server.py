@@ -19,24 +19,15 @@ class Server:
         self.socket_server.listen(1)
 
     def Accept(self):
-        try:
-            self.socket_client, self.ip_client = self.socket_server.accept()
-            print('> server accepted client : {}'.format(self.ip_client))
-        except OSError as error:
-            #print('> server failed to accept client, error:' + str(error))
-            pass
+        self.socket_client, self.ip_client = self.socket_server.accept()
+        print('> server accepted client : {}'.format(self.ip_client))
 
     def Receive(self):
-        try:
-            self.buffer = self.socket_client.recv(self.buffer_size)
-            if self.buffer:
-                self.data = json.loads(self.buffer.decode('utf-8'))
-                return True
-            else:
-                self.Close()
-                return False
-        except socket.error as error:
-            #print('> server failed to receive data, error:' + str(error))
+        self.buffer = self.socket_client.recv(self.buffer_size)
+        if self.buffer:
+            self.data = json.loads(self.buffer.decode('utf-8'))
+            return True
+        else:
             self.Close()
             return False
 
@@ -51,20 +42,16 @@ class Server:
             print(log)
 
     def Send(self, _action = [0, 0, 0]):
-        try:
-            data = {'Move': _action[0], 'Action': _action[1], 'Control': _action[2]}
-            self.socket_client.send(json.dumps(data).encode('utf-8'))
-        except AttributeError as error:
-            #print('> server failed to send data, error:' + str(error))
-            pass
+        data = {'Move': _action[0], 'Action': _action[1], 'Control': _action[2]}
+        self.socket_client.send(json.dumps(data).encode('utf-8'))
 
     def Close(self):
         print('Server.Close()')
         try:
             self.socket_client.close()
-            del self.socket_client
+            self.socket_client = None
             print('> server lost client : {}'.format(self.ip_client))
         except AttributeError as error:
-            #print('> server failed to close socket, error:' + str(error))
+            print('> server failed to close socket, error:' + str(error))
             if self.socket_server is not None:
                 self.socket_server.close()
