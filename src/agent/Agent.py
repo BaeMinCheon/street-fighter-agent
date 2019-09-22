@@ -48,6 +48,7 @@ class Agent:
         self.reward = 0
         self.number_decide = 0
         self.replay_queue = collections.deque()
+        self.number_epoch = 0
 
     def LoadModel(self, _filepath):
         saver = tf.train.Saver()
@@ -67,11 +68,12 @@ class Agent:
             self.replay_queue.popleft()
         self.state = next_state
 
-        if self.number_decide % self.train_period == (self.train_period - 1):
+        if (self.number_decide % self.train_period) == (self.train_period - 1):
             for i in range(self.train_number):
                 batch = random.sample(self.replay_queue, self.batch_size)
                 stack_x, stack_y = GetStacks(self.model_main, self.model_target, batch)
                 self.model_main.Train(stack_x, stack_y)
+            self.number_epoch += self.train_number
             self.session.run(self.sync_op)
 
     def Output(self):
