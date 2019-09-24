@@ -32,9 +32,9 @@ class Manager:
         while self.is_running:
             self.count_frame += 1
             if self.server.Receive():
-                #self.server.PrintData()
+                self.server.PrintData()
                 feature = self.PreProcess(self.server.data)
-                self.PrintLog(feature)
+                #self.PrintLog(feature)
                 need_agent, control = self.NeedAgent(feature)
                 if need_agent:
                     self.agent.Input(feature)
