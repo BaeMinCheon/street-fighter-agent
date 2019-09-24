@@ -34,6 +34,7 @@ class Manager:
             if self.server.Receive():
                 self.server.PrintData()
                 feature = self.PreProcess(self.server.data)
+                #self.PrintLog(feature)
                 need_agent, control = self.NeedAgent(feature)
                 if need_agent:
                     self.agent.Input(feature)
@@ -83,3 +84,7 @@ class Manager:
         if len(locals['control']) == 3:
             need_agent = False
         return need_agent, locals['control']
+    
+    def PrintLog(self, _feature):
+        if _feature['Winner.Player.Diff'] > 0:
+            print('Reward(Gap of HP), {}, Winner(1 or 2), {}, Epoch #, {}'.format(_feature['Gap.HP.P1'], _feature['Winner.Player'], self.agent.number_epoch))
